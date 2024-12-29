@@ -30,11 +30,13 @@ const Hero = () => {
         <h5 className="flex items-baseline gap-x-2 uppercase text-secondary medium-18">
           URBAN AESTHETIC <BsFire />
         </h5>
-        <h1 className="h1 font-[500] capitalize max-w-[722px]">Elevate Every Room with Modern Designs</h1>
+        <h1 className="h1 font-[500] capitalize max-w-[722px] text-white">
+          Visualise furniture in your space with AR
+        </h1>
         <div className="flex">
-          <Link className=""> 
+          <Link className="bg-white text-xs font-medium pl-5 rounded-full flexCenter gap-x-2 group">
             Check Our Modern Collection
-            <FaArrowRight />
+            <FaArrowRight className="bg-secondary text-white rounded-full w-11 h-11 p-3 m-[3px] border border-white group-hover:-rotate-[20deg] transition-all duration-500" />
           </Link>
         </div>
       </div>

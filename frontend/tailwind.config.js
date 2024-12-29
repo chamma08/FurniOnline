@@ -24,7 +24,7 @@ export default {
         "4xl": "2200px",
       },
       backgroundImage: {
-        hero: "url(/src/assets/2.jpg)",
+        hero: "url(/src/assets/3.jpg)",
         banner: "url(/src/assets/banner.png)"
       },
     },
