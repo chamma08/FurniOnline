@@ -8,18 +8,17 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Title from "./Title";
 
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { products } from "../assets/data";
 import Item from "./Item";
 
 const NewArrivals = () => {
-
-  const [newArrivals, setNewArrivals] = useState([])
+  const [newArrivals, setNewArrivals] = useState([]);
 
   useEffect(() => {
-    const data = products.slice(0, 10)
-    setNewArrivals(data)
-  }, [products])
+    const data = products.slice(0, 10);
+    setNewArrivals(data);
+  }, [products]);
 
   return (
     <section>
@@ -56,11 +55,10 @@ const NewArrivals = () => {
       >
         {newArrivals.map((product) => (
           <SwiperSlide key={product.id}>
-            <Item />
+            <Item product={product} />
           </SwiperSlide>
         ))}
       </Swiper>
-      
     </section>
   );
 };
