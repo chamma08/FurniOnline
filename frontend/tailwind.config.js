@@ -25,7 +25,7 @@ export default {
       },
       backgroundImage: {
         hero: "url(/src/assets/3.jpg)",
-        banner: "url(/src/assets/banner.png)"
+        banner: "url(/src/assets/4.jpg)"
       },
     },
   },

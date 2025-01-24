@@ -3,6 +3,35 @@ import heroImg from "../assets/bg.jpg";
 import { BsFire } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { FaArrowRight, FaPlay } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+const fadeDown = (delay) => {
+  return {
+    hidden: { opacity: 0, y: -100 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: delay,
+        duration: 0.5,
+      },
+    },
+  };
+};
+
+const fadeUp = (delay) => {
+  return {
+    hidden: { opacity: 0, y: 100 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: delay,
+        duration: 0.5,
+      },
+    },
+  };
+};
 
 const Hero = () => {
   return (
@@ -27,12 +56,22 @@ const Hero = () => {
         </p>
       </div>
       <div className="mt-12 sm:mt-20 xl:mt-40 max-w-[777px]">
-        <h5 className="flex items-baseline gap-x-2 uppercase text-secondary medium-18">
+        <motion.h5
+          variants={fadeDown(0.4)}
+          initial="hidden"
+          whileInView="show"
+          className="flex items-baseline gap-x-2 uppercase text-secondary medium-18"
+        >
           URBAN AESTHETIC <BsFire />
-        </h5>
-        <h1 className="h1 font-[500] capitalize max-w-[722px] text-white">
+        </motion.h5>
+        <motion.h1
+          variants={fadeUp(0.7)}
+          initial="hidden"
+          whileInView="show"
+          className="h1 font-[500] capitalize max-w-[722px] text-white"
+        >
           Visualise furniture in your space with AR
-        </h1>
+        </motion.h1>
         <div className="flex">
           <Link className="bg-white text-xs font-medium pl-5 rounded-full flexCenter gap-x-2 group">
             Check Our Modern Collection

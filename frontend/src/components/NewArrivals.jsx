@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -9,10 +9,11 @@ import "swiper/css/navigation";
 import Title from "./Title";
 
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import { products } from "../assets/data";
 import Item from "./Item";
+import { ShopContext } from "../context/ShopContext";
 
 const NewArrivals = () => {
+  const { products } = useContext(ShopContext);
   const [newArrivals, setNewArrivals] = useState([]);
 
   useEffect(() => {
@@ -21,8 +22,8 @@ const NewArrivals = () => {
   }, [products]);
 
   return (
-    <section>
-      <Title />
+    <section className="max-padd-container pt-16 pb-6 bg-primary">
+      <Title title1={'New'} title2={'Arrivals'} titleStyles={'pb-10'} paraStyles={'!block'}/>
       <Swiper
         autoplay={{
           delay: 3500,
@@ -49,9 +50,9 @@ const NewArrivals = () => {
             spaceBetween: 60,
           },
         }}
-        navigation={true}
+        navigation={false}
         modules={[Autoplay, Pagination]}
-        className="h-[555px]"
+        className="h-[555px] sm:h-[411px] md:h-[488px]"
       >
         {newArrivals.map((product) => (
           <SwiperSlide key={product.id}>

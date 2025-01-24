@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "./NavBar";
 import { FaBarsStaggered, FaRegCircleUser } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { TbBasket } from "react-icons/tb";
 import { RiUserLine } from "react-icons/ri";
+import { ShopContext } from "../context/ShopContext";
 
 const Header = () => {
-  const [token, setToken] = useState("");
+  const { token, getCartCount } = useContext(ShopContext);
   const [menuOpened, setMenuOpened] = useState(false);
 
   const toggleMenu = () => {
@@ -39,7 +40,7 @@ const Header = () => {
           <Link to="/cart" className="relative cursor-pointer flex">
             <TbBasket className="text-[27px]" />
             <span className="bg-secondary text-white text-[12px] absolute font-semibold left-1.5 -top-3.5 flexCenter w-4 h-4 rounded-full shadow-md">
-              0
+              {getCartCount()}
             </span>
           </Link>
           <div className="group relative">

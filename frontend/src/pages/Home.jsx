@@ -5,6 +5,7 @@ import Banner from '../components/Banner'
 import PopularProducts from '../components/PopularProducts'
 import Footer from '../components/Footer'
 import NewArrivals from '../components/NewArrivals'
+import Blog from '../components/Blog'
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
       <NewArrivals/>
       <Banner/>
       <PopularProducts/>
+      <Blog/>
       <Footer/>
     </>
   )
