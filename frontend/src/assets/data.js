@@ -65,6 +65,10 @@ import blog4 from "../assets/blogs/blog4.png";
 
 //3d models
 import chair1 from "../assets/models/chair1.glb";
+import chair2 from "../assets/models/chair2.glb";
+import chair3 from "../assets/models/chair3.glb";
+import chair4 from "../assets/models/chair4.glb";
+import chair5 from "../assets/models/chair5.glb";
 
 export const products = [
   {
@@ -87,12 +91,13 @@ export const products = [
     description:
       "A premium t-shirt offering exceptional comfort and a smooth texture, great for everyday wear.",
     price: 220,
-    image: [img2_1, img2_2, img2_3, img2_4],
+    image: [img2_1 /* , img2_2, img2_3, img2_4 */],
     category: "Men",
     subCategory: "Winterwear",
-    sizes: ["M", "L", "XL"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716621345448,
     popular: false,
+    model: [chair2],
   },
   {
     _id: "3",
@@ -103,9 +108,10 @@ export const products = [
     image: [img3],
     category: "Kids",
     subCategory: "Topwear",
-    sizes: ["S", "L", "XL"],
+    sizes: ["Wood", "Metal", "Fiber"],
     date: 1716234545448,
     popular: true,
+    model: [chair3],
   },
   {
     _id: "4",
@@ -113,12 +119,13 @@ export const products = [
     description:
       "A casual t-shirt made from breathable cotton, suitable for any informal occasion.",
     price: 180,
-    image: [img4_1, img4_2, img4_3, img4_4],
+    image: [img4_1 /* , img4_2, img4_3, img4_4 */],
     category: "Men",
     subCategory: "Topwear",
-    sizes: ["S", "M", "XXL"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716621345448,
     popular: false,
+    model: [chair4],
   },
   {
     _id: "5",
@@ -129,9 +136,10 @@ export const products = [
     image: [img5],
     category: "Women",
     subCategory: "Winterwear",
-    sizes: ["M", "L", "XL"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716622345448,
     popular: false,
+    model: [chair5],
   },
   {
     _id: "6",

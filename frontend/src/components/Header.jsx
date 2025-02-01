@@ -8,14 +8,20 @@ import { RiUserLine } from "react-icons/ri";
 import { ShopContext } from "../context/ShopContext";
 
 const Header = () => {
-  const { token, getCartCount } = useContext(ShopContext);
+  const { token, getCartCount, navigate } = useContext(ShopContext);
   const [menuOpened, setMenuOpened] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpened(!menuOpened);
   };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
-    <header className="max-padd-container w-full z-45">
+    <header className="max-padd-container w-full">
       <div className="flexBetween py-3">
         <Link to="/" className="flex flex-1">
           <div className="bold-32">
@@ -50,11 +56,30 @@ const Header = () => {
                   <FaRegCircleUser className="text-[29px] cursor-pointer" />
                 </div>
               ) : (
-                <butoon className="btn-light flexCenter gap-x-2">
+                <butoon
+                  onClick={() => navigate("/login")}
+                  className="btn-light cursor-pointer flexCenter gap-x-2"
+                >
                   Login <RiUserLine className="text-xl" />
                 </butoon>
               )}
             </div>
+            {token && (
+              <ul className="bg-white p-2 w-32 ring-1 ring-slate-900/5 rounded absolute right-0 top-7 hidden group-hover:flex flex-col regular-14 shadow-md z-50">
+                <li className="hover:bg-primary rounded-md cursor-pointer text-tertiary p-2">
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li onClick={()=>navigate('orders')} className="hover:bg-primary rounded-md cursor-pointer text-tertiary p-2">
+                  Orders
+                </li>
+                <li
+                  onClick={logout}
+                  className="hover:bg-primary rounded-md cursor-pointer text-tertiary p-2"
+                >
+                  Logout
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </div>

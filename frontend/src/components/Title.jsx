@@ -5,7 +5,7 @@ const Title = ({ title1, title2, titleStyles, title1Styles, paraStyles }) => {
     <div className={`${titleStyles} pb-1`}>
       <h3 className={`h3 ${title1Styles}`}>
         {title1}
-        <span className="text-secondary !font-thin"> {title2}</span>
+        <span className="text-secondary !font-normal"> {title2}</span>
       </h3>
       <p className={`${paraStyles} hidden`}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod

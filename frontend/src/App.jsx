@@ -10,6 +10,9 @@ import Cart from "./pages/Cart";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import XrHitModelContainer from "./components/xr-hit-model/XrHitModelContainer";
+import PlaceOrder from "./pages/PlaceOrder";
+import Login from "./pages/Login";
+import Orders from "./pages/Orders";
 
 const App = () => {
   return (
@@ -22,9 +25,12 @@ const App = () => {
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/place-order" element={<PlaceOrder />} />
         {/*  <Route path="/ar-view/:productId" element={<ArView />} /> */}
         <Route path="/arview" element={<XrHitModelContainer />} />
         <Route path="//mailto:info@furnionline.com" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </main>
   );

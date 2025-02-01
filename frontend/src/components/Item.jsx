@@ -46,14 +46,14 @@ const Item = ({ product }) => {
         />
       </Link>
       <div className="p-3 rounded-lg pt-12 bg-white shadow">
-        <motion.h4
+        <h4
           variants={fadeUp(1)}
           initial="hidden"
           whileInView="show"
           className="bold-15 line-clamp-1 lmy-0"
         >
           {product.name}
-        </motion.h4>
+        </h4>
         <div className="flexBetween pt-1">
           <h5 className="h5 pr-2">${product.price}.00</h5>
           <div className="flex items-baseline gap-x-1">

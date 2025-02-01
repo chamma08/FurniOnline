@@ -1,32 +1,38 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense, useRef, useEffect } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-export default function Model({position}) {
+export default function Model({ position, modelPath, color, dimensions = { width: 1, height: 1, depth: 1 } }) {
   const group = useRef();
-  const gltf = useLoader(GLTFLoader, "/models/chair1.glb");
-  /* const { actions } = useAnimations(animations, group); */
+  const gltf = useLoader(GLTFLoader, modelPath || "/models/default.glb");
+
+  useEffect(() => {
+    if (gltf.scene) {
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          child.material.color.set(color); 
+        }
+      });
+    }
+  }, [gltf.scene, color]);
+
   return (
     <Suspense fallback={null}>
-      <primitive object={gltf.scene} scale={2} position={position} />
+      <primitive
+        style={{
+          width: "100%",
+          height: "400px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          margintop: "40px",
+        }}
+        object={gltf.scene}
+        scale={[dimensions.width, dimensions.height, dimensions.depth]}
+        position={position}
+      />
     </Suspense>
   );
 }
 
-useGLTF.preload("/models/chair1.glb");
-
-/*import { useLoader } from '@react-three/fiber'
-import { Suspense } from 'react'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-
-const Model = ({position}) => {
-  const gltf = useLoader(GLTFLoader, "/models/model2.gltf");
-  return (
-    <Suspense fallback={null}>
-      <primitive position={position} object={gltf.scene} />
-    </Suspense>
-  )
-}
-
-export default Model*/
+useGLTF.preload("/models/default.glb");

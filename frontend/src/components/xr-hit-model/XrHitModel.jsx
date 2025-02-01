@@ -1,15 +1,25 @@
-import React, { useRef, useState } from 'react'
-import { OrbitControls } from '@react-three/drei'
+import React, { useEffect, useRef, useState } from 'react';
+import { OrbitControls } from '@react-three/drei';
 import { Interactive, useHitTest, useXR } from '@react-three/xr';
 import Model from './Model';
 import { useThree } from '@react-three/fiber';
 
-
-const XrHitModel = () => {
+const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, depth: 1 } }) => {
   const reticleRef = useRef();
-  const [models, setModels] = useState([])
+  const [models, setModels] = useState([]);
 
-  const {isPresenting} = useXR();
+  const { isPresenting } = useXR();
+
+  const { camera } = useThree();
+
+  useEffect(() => {
+    if (isPresenting) {
+      camera.fov = 50; 
+    } else {
+      camera.fov = 30; 
+    }
+    camera.updateProjectionMatrix(); 
+  }, [isPresenting, camera]);
 
   useThree(({ camera }) => {
     if (!isPresenting) {
@@ -17,19 +27,19 @@ const XrHitModel = () => {
     }
   });
 
-  useHitTest((hitMatrix,hit) => {
+  useHitTest((hitMatrix, hit) => {
     hitMatrix.decompose(
       reticleRef.current.position,
       reticleRef.current.quaternion,
       reticleRef.current.scale
-    )
-    reticleRef.current.rotation.set(-Math.PI/2,0,0) ;
-  })
+    );
+    reticleRef.current.rotation.set(-Math.PI / 2, 0, 0);
+  });
 
   const placeModel = (e) => {
     let position = e.intersection.object.position.clone();
     let id = Date.now();
-    setModels([{id, position}]);
+    setModels([{ id, position }]);
   };
 
   return (
@@ -38,7 +48,16 @@ const XrHitModel = () => {
       <ambientLight />
       {isPresenting &&
         models.map(({ position, id }) => {
-          return <Model key={id} position={position} />;
+          return (
+            <Model
+              key={id}
+              position={position}
+              modelPath={modelPath}
+              color={color}
+              dimensions={dimensions}
+              scale={[5,5,5]}
+            />
+          );
         })}
       {isPresenting && (
         <Interactive onSelect={placeModel}>
@@ -49,9 +68,9 @@ const XrHitModel = () => {
         </Interactive>
       )}
 
-      {!isPresenting && <Model />}
+      {!isPresenting && <Model modelPath={modelPath} color={color} dimensions={dimensions} scale={[5, 5, 5]}/>}
     </>
-  )
-}
+  );
+};
 
-export default XrHitModel
+export default XrHitModel;

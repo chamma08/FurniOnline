@@ -100,15 +100,41 @@ const Footer = () => {
           <div className="flexCenter gap-x-6">
             <FaPhone />
             <div>
-              <h5 className="h5">Phone</h5>
-              <p>+0123456789</p>
+              <motion.h5
+                variants={fadeUp(1.9)}
+                initial="hidden"
+                whileInView="show"
+                className="h5"
+              >
+                Phone
+              </motion.h5>
+              <motion.p
+                variants={fadeUp(2.2)}
+                initial="hidden"
+                whileInView="show"
+              >
+                +0123456789
+              </motion.p>
             </div>
           </div>
           <div className="flexCenter gap-x-6">
             <FaMailBulk />
             <div>
-              <h5 className="h5">Email Support</h5>
-              <p>matheeshacham08@gmail.com</p>
+              <motion.h5
+                variants={fadeUp(2.6)}
+                initial="hidden"
+                whileInView="show"
+                className="h5"
+              >
+                Email Support
+              </motion.h5>
+              <motion.p
+                variants={fadeUp(2.8)}
+                initial="hidden"
+                whileInView="show"
+              >
+                matheeshacham08@gmail.com
+              </motion.p>
             </div>
           </div>
         </div>
@@ -214,7 +240,7 @@ const Footer = () => {
       {/* copyrights */}
       <p className="max-padd-container bg-primary medium-14 py-2 px-8 rounded flexBetween mt-6">
         <span>2025 Research Project - Matheesha Dissanayake</span>
-        <span>All rights reserved</span>
+        <span>All Rights Reserved</span>
       </p>
     </footer>
   );

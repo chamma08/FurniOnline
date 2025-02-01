@@ -109,7 +109,7 @@ const Product = () => {
               <button className="btn-light !rounded-lg !py-3.5 gap-x-2">
                 <FaHeart />
               </button>
-              <Link to={"/arview"}>
+              <Link to={`/arview?model=${product.model?.[0] || ""}&price=${product.price}`}>
                 <button className="btn-light !rounded-lg !py-3.5 gap-x-2">
                   <FaCamera />
                 </button>
