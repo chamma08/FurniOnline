@@ -33,6 +33,9 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
       reticleRef.current.quaternion,
       reticleRef.current.scale
     );
+  
+    // Adjust the reticle's position to be exactly on the floor
+    reticleRef.current.position.y -= 0.1; // Adjust this value based on your needs
     reticleRef.current.rotation.set(-Math.PI / 2, 0, 0);
   });
 
