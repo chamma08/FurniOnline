@@ -12,7 +12,11 @@ const XrHitModelContainer = () => {
   const queryParams = new URLSearchParams(location.search);
   const modelPath = queryParams.get("model");
   const [color, setColor] = useState("#ffffff");
-  const [dimensions, setDimensions] = useState({ width: 1, height: 1, depth: 1 });
+  const [dimensions, setDimensions] = useState({
+    width: 1,
+    height: 1,
+    depth: 1,
+  });
   const productPrice = parseFloat(queryParams.get("price")) || 100;
   const [price, setPrice] = useState(productPrice);
 
@@ -53,8 +57,11 @@ const XrHitModelContainer = () => {
           <h1 className="text-2xl font-bold">Furniture 3D View </h1>
           <hr className="border-1 border-[2px] border-wid border-black my-3 w-24" />
         </div>
-        <ColorPicker onColorChange={handleColorChange} />
-        <DimensionControls dimensions={dimensions} onDimensionChange={handleDimensionChange} />
+
+        <DimensionControls
+          dimensions={dimensions}
+          onDimensionChange={handleDimensionChange}
+        />
         <p className="text-lg font-semibold mt-4">Price: ${price.toFixed(2)}</p>
         <div className="flex  gap-4 mt-8">
           <button
@@ -82,9 +89,14 @@ const XrHitModelContainer = () => {
           camera={{ position: [0, 0, 3], fov: 30 }}
         >
           <XR>
-            <XrHitModel modelPath={modelPath} color={color} dimensions={dimensions} />
+            <XrHitModel
+              modelPath={modelPath}
+              color={color}
+              dimensions={dimensions}
+            />
           </XR>
         </Canvas>
+        <ColorPicker onColorChange={handleColorChange} />
         <div className="flex justify-center">
           <ARButton
             sessionInit={{ requiredFeatures: ["hit-test"] }}
