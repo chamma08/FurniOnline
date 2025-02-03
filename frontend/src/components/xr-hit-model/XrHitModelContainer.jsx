@@ -58,6 +58,10 @@ const XrHitModelContainer = () => {
           <hr className="border-1 border-[2px] border-wid border-black my-3 w-24" />
         </div>
 
+        <div>
+          <p className="text-lg font-semibold mb-4 mt-4 text-center">Want to Customize Furniture, Customize it from below</p>
+        </div>
+
         <DimensionControls
           dimensions={dimensions}
           onDimensionChange={handleDimensionChange}

@@ -32,7 +32,7 @@ const ColorPicker = ({ onColorChange }) => {
       {
         breakpoint: 768, // Mobile devices
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 5,
         },
       },
     ],
