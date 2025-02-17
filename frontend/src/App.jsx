@@ -13,6 +13,7 @@ import XrHitModelContainer from "./components/xr-hit-model/XrHitModelContainer";
 import PlaceOrder from "./pages/PlaceOrder";
 import Login from "./pages/Login";
 import Orders from "./pages/Orders";
+import Recommendations from "./pages/Recomendation";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/place-order" element={<PlaceOrder />} />
+        <Route path="/recommendations" element={<Recommendations />} />
         {/*  <Route path="/ar-view/:productId" element={<ArView />} /> */}
         <Route path="/arview" element={<XrHitModelContainer />} />
         <Route path="//mailto:info@furnionline.com" element={<Contact />} />

@@ -1,15 +1,18 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import { FaBarsStaggered, FaRegCircleUser } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { TbBasket } from "react-icons/tb";
 import { RiUserLine } from "react-icons/ri";
 import { ShopContext } from "../context/ShopContext";
+import { use } from "react";
 
 const Header = () => {
   const { token, getCartCount, navigate } = useContext(ShopContext);
   const [menuOpened, setMenuOpened] = useState(false);
+
+  const navi = useNavigate();
 
   const toggleMenu = () => {
     setMenuOpened(!menuOpened);
@@ -42,7 +45,7 @@ const Header = () => {
             onClick={toggleMenu}
             className="xl:hidden cursor-pointer text-xl"
           />
-          <FaSearch className="text-lg cursor-pointer" />
+          <FaSearch onClick={()=>navi("/recommendations")} className="text-lg cursor-pointer" />
           <Link to="/cart" className="relative cursor-pointer flex">
             <TbBasket className="text-[27px]" />
             <span className="bg-secondary text-white text-[12px] absolute font-semibold left-1.5 -top-3.5 flexCenter w-4 h-4 rounded-full shadow-md">

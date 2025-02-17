@@ -33,21 +33,17 @@ const XrHitModelContainer = () => {
     const newDimensions = { ...dimensions, [dimension]: value };
     setDimensions(newDimensions);
 
-    // Calculate and update the price
     const newPrice = calculatePrice(newDimensions, productPrice);
     setPrice(newPrice);
   };
 
-  // Reset dimensions to default values
   const handleReset = () => {
     setDimensions({ width: 1, height: 1, depth: 1 });
-    setPrice(productPrice); // Reset price to the base product price
+    setPrice(productPrice); 
   };
 
-  // Save the current price (you can replace this with your save logic)
   const handleSave = () => {
     alert(`Price saved: $${price.toFixed(2)}`);
-    // Add your save logic here (e.g., send the price to a backend or store it in state)
   };
 
   return (
@@ -59,7 +55,9 @@ const XrHitModelContainer = () => {
         </div>
 
         <div>
-          <p className="text-lg font-semibold mb-4 mt-4 text-center">Want to Customize Furniture, Customize it from below</p>
+          <p className="text-lg font-semibold mb-4 mt-4 text-center">
+            Want to Customize Furniture, Customize it from below
+          </p>
         </div>
 
         <DimensionControls
