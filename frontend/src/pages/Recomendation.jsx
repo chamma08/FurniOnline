@@ -1,8 +1,65 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
-import { FaSearch } from "react-icons/fa";
+import { FaFileUpload, FaRegCheckCircle, FaSearch } from "react-icons/fa";
 import { FaCircleNotch } from "react-icons/fa6";
+import { motion } from "framer-motion";
+
+const fadeDown = (delay) => {
+  return {
+    hidden: { opacity: 0, y: -100 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: delay,
+        duration: 0.5,
+      },
+    },
+  };
+};
+
+const fadeUp = (delay) => {
+  return {
+    hidden: { opacity: 0, y: 100 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: delay,
+        duration: 0.5,
+      },
+    },
+  };
+};
+
+const fadeRight = (delay) => {
+  return {
+    hidden: { opacity: 0, x: -100 },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        delay: delay,
+        duration: 0.5,
+      },
+    },
+  };
+};
+
+const fadeLeft = (delay) => {
+  return {
+    hidden: { opacity: 0, x: 100 },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        delay: delay,
+        duration: 0.5,
+      },
+    },
+  };
+};
 
 const Recommendations = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -60,28 +117,79 @@ const Recommendations = () => {
       <div className="bg-primary mb-16 bg-rc bg-cover bg-center bg-no-repeat w-full">
         <div className="max-padd-container py-10">
           <h1 className="h1 font-[300] capitalize max-w-[722px] text-black">
-            <span className="font-bold text-blue-900">AI </span>Product
-            Recommendations
+            <motion.span
+              variants={fadeLeft(0.5)}
+              initial="hidden"
+              whileInView="show"
+              className="font-bold text-blue-900"
+            >
+              AI{" "}
+            </motion.span>
+            <motion.span
+              variants={fadeDown(0.7)}
+              initial="hidden"
+              whileInView="show"
+            >
+              Product
+            </motion.span>
+
+            <motion.span
+              variants={fadeDown(0.9)}
+              initial="hidden"
+              whileInView="show"
+            >
+              {" "}
+              Recommendations
+            </motion.span>
           </h1>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="mb-4 mt-8"
-          />
           <div className="flex items-center gap-x-4 mt-6 mb-10">
-            <button
+            <motion.div className="relative inline-block">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              <div
+                className={`flex items-center gap-2 px-4 py-2 ${
+                  selectedImage ? "bg-green-600" : "bg-[#1b7c8dd3]"
+                } text-white rounded-full cursor-pointer`}
+              >
+                {selectedImage ? (
+                  <>
+                    <FaRegCheckCircle size={20} />
+                    <span>Image Uploaded</span>
+                  </>
+                ) : (
+                  <>
+                    <FaFileUpload size={20} />
+                    <span>Upload Image</span>
+                  </>
+                )}
+              </div>
+            </motion.div>
+            <motion.button
               onClick={fetchRecommendations}
-              className="bg-blue-700 rounded-full hover:bg-blue-600 text-white p-2 flexCenter gap-x-2 capitalize"
+              disabled={!selectedImage}
+              className={`${
+                selectedImage
+                  ? "bg-blue-700 hover:bg-blue-600"
+                  : "bg-gray-400 cursor-not-allowed"
+              } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
             >
               Search <FaSearch />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={handleReset}
-              className="bg-slate-500 rounded-full hover:bg-slate-400 text-white p-2 flexCenter gap-x-2 capitalize"
+              disabled={!selectedImage}
+              className={`${
+                selectedImage
+                  ? "bg-slate-500 hover:bg-slate-400"
+                  : "bg-gray-400 cursor-not-allowed"
+              } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
             >
               Reset <FaCircleNotch />
-            </button>
+            </motion.button>
           </div>
 
           {uploadedImageURL && (
@@ -104,7 +212,9 @@ const Recommendations = () => {
           ) : (
             recommendations.length > 0 && (
               <div className="mt-4 text-center">
-                <h2 className="text-3xl font-semibold mb-6 h1">Our <span className="text-green-600">Recommendations</span></h2>
+                <h2 className="text-3xl font-semibold mb-6 h1">
+                  Our <span className="text-green-600">Recommendations</span>
+                </h2>
                 <div className="grid grid-cols-3 gap-4">
                   {recommendations.map((rec, index) => (
                     <div key={index} className=" rounded">
