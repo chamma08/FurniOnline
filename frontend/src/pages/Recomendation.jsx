@@ -118,7 +118,7 @@ const Recommendations = () => {
         <div className="max-padd-container py-10">
           <h1 className="h1 font-[300] capitalize max-w-[722px] text-black">
             <motion.span
-              variants={fadeLeft(0.5)}
+              variants={fadeLeft(0.6)}
               initial="hidden"
               whileInView="show"
               className="font-bold text-blue-900"
@@ -126,7 +126,7 @@ const Recommendations = () => {
               AI{" "}
             </motion.span>
             <motion.span
-              variants={fadeDown(0.7)}
+              variants={fadeDown(0.8)}
               initial="hidden"
               whileInView="show"
             >
@@ -143,7 +143,12 @@ const Recommendations = () => {
             </motion.span>
           </h1>
           <div className="flex items-center gap-x-4 mt-6 mb-10">
-            <motion.div className="relative inline-block">
+            <motion.div
+              variants={fadeUp(1.2)}
+              initial="hidden"
+              whileInView="show"
+              className="relative inline-block"
+            >
               <input
                 type="file"
                 accept="image/*"
@@ -152,7 +157,7 @@ const Recommendations = () => {
               />
               <div
                 className={`flex items-center gap-2 px-4 py-2 ${
-                  selectedImage ? "bg-green-600" : "bg-[#1b7c8dd3]"
+                  selectedImage ? "bg-green-600" : "bg-[#1b7c8d]"
                 } text-white rounded-full cursor-pointer`}
               >
                 {selectedImage ? (
@@ -169,23 +174,29 @@ const Recommendations = () => {
               </div>
             </motion.div>
             <motion.button
+              variants={fadeUp(1.4)}
+              initial="hidden"
+              whileInView="show"
               onClick={fetchRecommendations}
               disabled={!selectedImage}
               className={`${
                 selectedImage
                   ? "bg-blue-700 hover:bg-blue-600"
-                  : "bg-gray-400 cursor-not-allowed"
+                  : "bg-gray-300 cursor-not-allowed"
               } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
             >
               Search <FaSearch />
             </motion.button>
             <motion.button
+              variants={fadeUp(1.6)}
+              initial="hidden"
+              whileInView="show"
               onClick={handleReset}
               disabled={!selectedImage}
               className={`${
                 selectedImage
                   ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-gray-400 cursor-not-allowed"
+                  : "bg-gray-300 cursor-not-allowed"
               } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
             >
               Reset <FaCircleNotch />
