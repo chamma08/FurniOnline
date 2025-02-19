@@ -26,7 +26,8 @@ export default {
       backgroundImage: {
         hero: "url(/src/assets/3.jpg)",
         banner: "url(/src/assets/4.jpg)",
-        rc: "url(/src/assets/rc.jpg)"
+        rc: "url(/src/assets/rc.jpg)",
+        cb: "url(/src/assets/cb.jpg)",
       },
     },
   },

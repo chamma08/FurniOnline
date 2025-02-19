@@ -14,6 +14,7 @@ import PlaceOrder from "./pages/PlaceOrder";
 import Login from "./pages/Login";
 import Orders from "./pages/Orders";
 import Recommendations from "./pages/Recomendation";
+import ChatBot from "./pages/Chatbot";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/recommendations" element={<Recommendations />} />
         {/*  <Route path="/ar-view/:productId" element={<ArView />} /> */}
         <Route path="/arview" element={<XrHitModelContainer />} />
+        <Route path="/ai-assistant" element={<ChatBot />} />
         <Route path="//mailto:info@furnionline.com" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/orders" element={<Orders />} />

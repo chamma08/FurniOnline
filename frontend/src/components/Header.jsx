@@ -7,6 +7,7 @@ import { TbBasket } from "react-icons/tb";
 import { RiUserLine } from "react-icons/ri";
 import { ShopContext } from "../context/ShopContext";
 import { use } from "react";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const { token, getCartCount, navigate } = useContext(ShopContext);
@@ -45,18 +46,39 @@ const Header = () => {
             onClick={toggleMenu}
             className="xl:hidden cursor-pointer text-xl"
           />
-          <FaSearch onClick={()=>navi("/recommendations")} className="text-lg cursor-pointer" />
-          <Link to="/cart" className="relative cursor-pointer flex">
+          <FaSearch
+            onClick={() => navi("/recommendations")}
+            className="text-lg cursor-pointer"
+            whileHover={{ scale: 1.2 }}
+          />
+          <Link to="/ai-assistant" className="relative cursor-pointer flex">
+            <motion.img
+              src="/src/assets/chatbot.png"
+              alt="chatbot"
+              className="w-8 h-8"
+              animate={{
+                rotate: [0, 10, -10, 0],
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              whileHover={{ scale: 1.2 }}
+            />
+          </Link>
+          {/* <Link to="/cart" className="relative cursor-pointer flex">
             <TbBasket className="text-[27px]" />
             <span className="bg-secondary text-white text-[12px] absolute font-semibold left-1.5 -top-3.5 flexCenter w-4 h-4 rounded-full shadow-md">
               {getCartCount()}
             </span>
-          </Link>
+          </Link> */}
           <div className="group relative">
             <div>
               {token ? (
                 <div>
-                  <FaRegCircleUser className="text-[29px] cursor-pointer" />
+                  <FaRegCircleUser className="text-[20px] cursor-pointer" />
                 </div>
               ) : (
                 <butoon
@@ -72,7 +94,10 @@ const Header = () => {
                 <li className="hover:bg-primary rounded-md cursor-pointer text-tertiary p-2">
                   <Link to="/profile">Profile</Link>
                 </li>
-                <li onClick={()=>navigate('orders')} className="hover:bg-primary rounded-md cursor-pointer text-tertiary p-2">
+                <li
+                  onClick={() => navigate("orders")}
+                  className="hover:bg-primary rounded-md cursor-pointer text-tertiary p-2"
+                >
                   Orders
                 </li>
                 <li

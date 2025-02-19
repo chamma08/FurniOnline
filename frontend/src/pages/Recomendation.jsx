@@ -114,7 +114,7 @@ const Recommendations = () => {
 
   return (
     <div>
-      <div className="bg-primary mb-16 bg-rc bg-cover bg-center bg-no-repeat w-full">
+      <div className="bg-primary mb-16 bg-cb bg-cover bg-center bg-no-repeat w-full">
         <div className="max-padd-container py-10">
           <h1 className="h1 font-[300] capitalize max-w-[722px] text-black">
             <motion.span
@@ -163,12 +163,12 @@ const Recommendations = () => {
                 {selectedImage ? (
                   <>
                     <FaRegCheckCircle size={20} />
-                    <span>Image Uploaded</span>
+                    <span>Uploaded</span>
                   </>
                 ) : (
                   <>
                     <FaFileUpload size={20} />
-                    <span>Upload Image</span>
+                    <span>Upload</span>
                   </>
                 )}
               </div>
@@ -205,7 +205,9 @@ const Recommendations = () => {
 
           {uploadedImageURL && (
             <div className="mt-4">
-              <h2 className="text-xl font-semibold mb-2">Uploaded Image</h2>
+              <h2 className="text-xl font-bold mb-2 bg-white rounded-xl w-1/2 justify-center items-center sm:bg-transparent sm:border-black text-center sm:text-left p-2">
+                Uploaded Image
+              </h2>
               <div className="rounded">
                 <img
                   src={uploadedImageURL}
