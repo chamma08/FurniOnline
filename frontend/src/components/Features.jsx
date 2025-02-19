@@ -82,10 +82,12 @@ const Features = () => {
               whileInView="show"
               className="justify"
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Blanditiis, reiciendis eius tenetur perspiciatis doloribus non
-              repudiandae tempore cumque adipisci ea minima ab provident quis
-              ratione facilis velit ad est molestiae.
+              Transform the way you shop for furniture with our cutting-edge
+              AR-powered experience! Visualize how each piece fits into your
+              space in real-time, explore different styles, colors, and
+              arrangements, and make confident decisions before you buy. Say
+              goodbye to guesswork and hello to a seamless, immersive shopping
+              experience!
             </motion.p>
           </div>
           <div className="p-4 rounded-3xl">
@@ -102,10 +104,12 @@ const Features = () => {
               initial="hidden"
               whileInView="show"
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-              iure excepturi quia eius reiciendis velit perspiciatis quam, fugit
-              nulla rem sit ex consectetur pariatur distinctio tempore vel
-              officiis? Nihil, quas!
+              Enjoy a safe and seamless shopping experience with our highly
+              secure payment options. We use advanced encryption and trusted
+              payment gateways to protect your transactions, ensuring your
+              personal and financial information remains safe. Shop for your
+              perfect furniture with confidence, knowing that your payments are
+              secure, reliable, and hassle-free
             </motion.p>
           </div>
           <div className="p-4 rounded-3xl">
@@ -113,15 +117,12 @@ const Features = () => {
               variants={fadeDown(1.8)}
               initial="hidden"
               whileInView="show"
-              className="h4 capitalize"
+              className="h4 capitalize "
             >
               AI Powered
             </motion.h4>
             <motion.p variants={fadeUp(2)} initial="hidden" whileInView="show">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-              Praesentium numquam ipsa, vero corporis exercitationem doloremque
-              eveniet ab quasi iusto, minima asperiores error dolor mollitia
-              commodi iste. Vitae error corrupti sed!
+            Discover the perfect furniture effortlessly with our AI-powered recommendation system! Simply upload an image, and our smart AI will suggest matching products tailored to your style. Plus, get personalized design advice from our AI Assistant, making your shopping experience seamless and hassle-free!
             </motion.p>
           </div>
         </div>

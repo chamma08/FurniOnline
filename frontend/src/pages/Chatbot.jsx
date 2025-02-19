@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
 import { motion } from "framer-motion";
+import { IoSend } from "react-icons/io5";
+import { GrClear } from "react-icons/gr";
 
 const fadeDown = (delay) => {
   return {
@@ -247,21 +249,21 @@ const ChatBot = () => {
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={sendMessage}
-                  className="flex-1 p-2 bg-blue-500 hover:bg-blue-900 text-white rounded-3xl"
+                  className="flex-1 p-2 bg-blue-500 flexCenter hover:bg-blue-900 text-white rounded-3xl"
                 >
-                  Send
+                  Send <IoSend className="ml-2"/>
                 </button>
                 <button
                   onClick={clearChat}
                   disabled={chatHistory.length === 0}
                   className={`flex-1 p-2 ${
-                    chatHistory.length === 0 ? "bg-gray-200 cursor-not-allowed" : "bg-red-500 hover:bg-red-700"
-                  } text-white rounded-3xl`}
+                    chatHistory.length === 0 ? "bg-slate-200 cursor-not-allowed" : "bg-red-500 hover:bg-red-700"
+                  } text-white rounded-3xl flexCenter`}
                 >
-                  Clear
+                  Clear <GrClear className="ml-2"/>
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="flex flex-wrap gap-2 mt-4">
                 {[
                   "Rules for cash on delivery?",
                   "How long does delivery take?",
