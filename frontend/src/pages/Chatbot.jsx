@@ -185,7 +185,7 @@ const ChatBot = () => {
                   className="flex justify-center items-center h-full"
                 >
                   <motion.img
-                    src="/src/assets/chatbot2.png"
+                    src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot2.png?alt=media&token=601dceb5-9d7b-4f69-97f0-208cdf0e1754"
                     alt="Chatbot"
                     className="w-32 h-32"
                     animate={{

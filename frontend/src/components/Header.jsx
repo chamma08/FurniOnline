@@ -53,7 +53,7 @@ const Header = () => {
           />
           <Link to="/ai-assistant" className="relative cursor-pointer flex">
             <motion.img
-              src="/src/assets/chatbot.png"
+              src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot2.png?alt=media&token=601dceb5-9d7b-4f69-97f0-208cdf0e1754"
               alt="chatbot"
               className="w-8 h-8"
               animate={{
