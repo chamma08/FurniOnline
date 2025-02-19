@@ -212,7 +212,7 @@ const ChatBot = () => {
                 >
                   {msg.sender === "bot" && (
                     <motion.img
-                      src="/src/assets/chatbot.png"
+                      src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot.png?alt=media&token=4e35c06e-4b3d-40dd-a038-2877b8cccf5d"
                       alt="Bot"
                       className="w-8 h-8 rounded-full mr-2 bg-white border-blue-700 border-2 p-1"
                       animate={{
