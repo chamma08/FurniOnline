@@ -11,8 +11,8 @@ const App = () => {
   return (
     <main>
       <ToastContainer />
-      <div>
-        <div>
+      <div className="bg-primary">
+        <div className="mx-auto max-w-[1200px] flex flex-col sm:flex-row">
           <Sidebar />
           <Routes>
             <Route path="/" element={<Add />} />

@@ -5,61 +5,41 @@ import { FaFileUpload, FaRegCheckCircle, FaSearch } from "react-icons/fa";
 import { FaCircleNotch } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
-const fadeDown = (delay) => {
-  return {
-    hidden: { opacity: 0, y: -100 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: delay,
-        duration: 0.5,
-      },
-    },
-  };
-};
+const fadeDown = (delay) => ({
+  hidden: { opacity: 0, y: -100 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { delay: delay, duration: 0.5 },
+  },
+});
 
-const fadeUp = (delay) => {
-  return {
-    hidden: { opacity: 0, y: 100 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: delay,
-        duration: 0.5,
-      },
-    },
-  };
-};
+const fadeUp = (delay) => ({
+  hidden: { opacity: 0, y: 100 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { delay: delay, duration: 0.5 },
+  },
+});
 
-const fadeRight = (delay) => {
-  return {
-    hidden: { opacity: 0, x: -100 },
-    show: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: delay,
-        duration: 0.5,
-      },
-    },
-  };
-};
+const fadeRight = (delay) => ({
+  hidden: { opacity: 0, x: -100 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { delay: delay, duration: 0.5 },
+  },
+});
 
-const fadeLeft = (delay) => {
-  return {
-    hidden: { opacity: 0, x: 100 },
-    show: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        delay: delay,
-        duration: 0.5,
-      },
-    },
-  };
-};
+const fadeLeft = (delay) => ({
+  hidden: { opacity: 0, x: 100 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: { delay: delay, duration: 0.5 },
+  },
+});
 
 const Recommendations = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -67,10 +47,19 @@ const Recommendations = () => {
   const [uploadedImageURL, setUploadedImageURL] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const generateDummyProducts = (images) => {
+    return images.map((img, index) => ({
+      _id: index,
+      name: `Furniture ${index + 1}`,
+      description: `This is a description for product ${index + 1}`,
+      price: (Math.random() * 100 + 50).toFixed(2),
+      image: [img],
+    }));
+  };
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setSelectedImage(file);
-
     if (file) {
       setUploadedImageURL(URL.createObjectURL(file));
     }
@@ -91,13 +80,12 @@ const Recommendations = () => {
         "http://127.0.0.1:5001/recommend",
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      setRecommendations(response.data.recommendations);
+      const aiOutput = response.data.recommendations;
+      const dummyProducts = generateDummyProducts(aiOutput);
+      setRecommendations(dummyProducts);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       alert("Something went wrong. Please try again.");
@@ -114,7 +102,7 @@ const Recommendations = () => {
 
   return (
     <div>
-      <div className="bg-primary mb-16 bg-cb bg-cover bg-center bg-no-repeat w-full">
+      <div className="bg-primary mb-16 bg-rc bg-cover bg-center bg-no-repeat w-full">
         <div className="max-padd-container py-10">
           <h1 className="h1 font-[300] capitalize max-w-[722px] text-black">
             <motion.span
@@ -132,7 +120,6 @@ const Recommendations = () => {
             >
               Product
             </motion.span>
-
             <motion.span
               variants={fadeDown(0.9)}
               initial="hidden"
@@ -228,14 +215,24 @@ const Recommendations = () => {
                 <h2 className="text-3xl font-semibold mb-6 h1">
                   Our <span className="text-green-600">Recommendations</span>
                 </h2>
-                <div className="grid grid-cols-3 gap-4">
-                  {recommendations.map((rec, index) => (
-                    <div key={index} className=" rounded">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {recommendations.map((product) => (
+                    <div
+                      key={product._id}
+                      className="bg-white rounded-3xl shadow p-4"
+                    >
                       <img
-                        src={rec}
-                        alt={`Recommendation ${index + 1}`}
-                        className="w-full h-full object-cover rounded-xl"
+                        src={product.image[0]}
+                        alt={product.name}
+                        className="w-full h-48 object-cover mb-2 rounded-xl"
                       />
+                      <div className="bg-gray-100 p-2 rounded-lg">
+                        <h3 className="text-lg font-semibold">
+                          {product.name}
+                        </h3>
+                        <p className="text-gray-700">{product.description}</p>
+                        <p className="font-bold mt-2">${product.price}</p>
+                      </div>
                     </div>
                   ))}
                 </div>

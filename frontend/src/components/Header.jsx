@@ -55,7 +55,7 @@ const Header = () => {
             <motion.img
               src="https://firebasestorage.googleapis.com/v0/b/quickbuy-assign.appspot.com/o/chatbot2.png?alt=media&token=601dceb5-9d7b-4f69-97f0-208cdf0e1754"
               alt="chatbot"
-              className="w-8 h-8"
+              className=" xs:w-8 xs:h-8 max-xs:w-8 max-xs:h-8"
               animate={{
                 rotate: [0, 10, -10, 0],
                 y: [0, -5, 0],
@@ -68,12 +68,12 @@ const Header = () => {
               whileHover={{ scale: 1.2 }}
             />
           </Link>
-          {/* <Link to="/cart" className="relative cursor-pointer flex">
+          <Link to="/cart" className="relative cursor-pointer flex">
             <TbBasket className="text-[27px]" />
             <span className="bg-secondary text-white text-[12px] absolute font-semibold left-1.5 -top-3.5 flexCenter w-4 h-4 rounded-full shadow-md">
               {getCartCount()}
             </span>
-          </Link> */}
+          </Link>
           <div className="group relative">
             <div>
               {token ? (
