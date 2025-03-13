@@ -9,16 +9,16 @@ const addProduct = async (req, res) => {
 
     //extracting images if provided
     const image1 = req.files?.image1?.[0];
-    const image2 = req.files?.image1?.[0];
-    const image3 = req.files?.image1?.[0];
-    const image4 = req.files?.image1?.[0];
+    const image2 = req.files?.image2?.[0];
+    const image3 = req.files?.image3?.[0];
+    const image4 = req.files?.image4?.[0];
 
     const images = [image1, image2, image3, image4].filter(
       (item) => item !== undefined
     );
 
     //uploading images to cloudinary or use default image
-    let imagesUrl;
+    let imagesUrl = [];
     if (images.length > 0) {
       imagesUrl = await Promise.all(
         images.map(async (item) => {
@@ -36,12 +36,12 @@ const addProduct = async (req, res) => {
     const productData = {
       name,
       description,
-      price: Number(price),
+      price,
       category,
       subCategory,
       sizes: sizes ? JSON.parse(sizes) : [],
       popular: popular === "true" ? true : false,
-      images: imagesUrl,
+      image: imagesUrl,
       date: Date.now(),
     };
 

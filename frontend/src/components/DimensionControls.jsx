@@ -6,54 +6,36 @@ const DimensionControls = ({ dimensions, onDimensionChange }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col space-y-2">
-        <label className="text-sm font-medium text-gray-700">
-          Width:{" "}
-          <span className="font-semibold">{dimensions.width.toFixed(2)}</span>
-        </label>
-        <input
-          type="range"
-          min="0.1"
-          max="5"
-          step="0.1"
-          value={dimensions.width}
-          onChange={(e) => handleChange("width", e.target.value)}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:rounded-full"
-        />
-      </div>
-
-      <div className="flex flex-col space-y-2">
-        <label className="text-sm font-medium text-gray-700">
-          Height:{" "}
-          <span className="font-semibold">{dimensions.height.toFixed(2)}</span>
-        </label>
-        <input
-          type="range"
-          min="0.1"
-          max="5"
-          step="0.1"
-          value={dimensions.height}
-          onChange={(e) => handleChange("height", e.target.value)}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
-      </div>
-
-      <div className="flex flex-col space-y-2">
-        <label className="text-sm font-medium text-gray-700">
-          Depth:{" "}
-          <span className="font-semibold">{dimensions.depth.toFixed(2)}</span>
-        </label>
-        <input
-          type="range"
-          min="0.1"
-          max="5"
-          step="0.1"
-          value={dimensions.depth}
-          onChange={(e) => handleChange("depth", e.target.value)}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
-      </div>
+    <div className="space-y-6 bg-white p-5 rounded-2xl shadow-lg">
+      {["width", "height", "depth"].map((dim) => (
+        <div key={dim} className="flex flex-col space-y-2">
+          <label className="text-md font-semibold text-gray-800 flex justify-between">
+            {dim.charAt(0).toUpperCase() + dim.slice(1)}:
+            <span className="text-blue-600">{dimensions[dim].toFixed(2)}m</span>
+          </label>
+          <input
+            type="range"
+            min="0.1"
+            max="5"
+            step="0.1"
+            value={dimensions[dim]}
+            onChange={(e) => handleChange(dim, e.target.value)}
+            className="
+              w-full h-2 bg-gradient-to-r from-blue-300 to-blue-600 
+              rounded-lg appearance-none cursor-pointer transition-all 
+              shadow-inner 
+              [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 
+              [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:rounded-full 
+              [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-all 
+              [&::-webkit-slider-thumb]:hover:scale-110 
+              [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 
+              [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:rounded-full 
+              [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:transition-all 
+              [&::-moz-range-thumb]:hover:scale-110
+            "
+          />
+        </div>
+      ))}
     </div>
   );
 };

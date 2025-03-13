@@ -24,18 +24,49 @@ const XrHitModelContainer = () => {
     setColor(newColor);
   };
 
+  /* const calculatePrice = (dimensions, basePrice) => {
+    const volume = dimensions.width * dimensions.height * dimensions.depth;
+    return basePrice * volume;
+  }; */
+
+  const handleDimensionChange = (dimension, value) => {
+    let newDimensions = { ...dimensions };
+    let scaleFactor = 0.2; // Other dimensions adjust by 20% of the change
+  
+    let change = value - newDimensions[dimension]; 
+  
+    // Update the changed dimension
+    newDimensions[dimension] = value;
+  
+    // Adjust other two dimensions proportionally
+    if (dimension === "height") {
+      newDimensions.width += change * scaleFactor;
+      newDimensions.depth += change * scaleFactor;
+    } else if (dimension === "width") {
+      newDimensions.height += change * scaleFactor;
+      newDimensions.depth += change * scaleFactor;
+    } else if (dimension === "depth") {
+      newDimensions.height += change * scaleFactor;
+      newDimensions.width += change * scaleFactor;
+    }
+  
+    // Ensure values are not negative
+    newDimensions.width = Math.max(newDimensions.width, 0.1);
+    newDimensions.height = Math.max(newDimensions.height, 0.1);
+    newDimensions.depth = Math.max(newDimensions.depth, 0.1);
+  
+    setDimensions(newDimensions);
+  
+    // Recalculate price
+    const newPrice = calculatePrice(newDimensions, productPrice);
+    setPrice(newPrice);
+  };
+  
   const calculatePrice = (dimensions, basePrice) => {
     const volume = dimensions.width * dimensions.height * dimensions.depth;
     return basePrice * volume;
   };
-
-  const handleDimensionChange = (dimension, value) => {
-    const newDimensions = { ...dimensions, [dimension]: value };
-    setDimensions(newDimensions);
-
-    const newPrice = calculatePrice(newDimensions, productPrice);
-    setPrice(newPrice);
-  };
+  
 
   const handleReset = () => {
     setDimensions({ width: 1, height: 1, depth: 1 });
@@ -64,17 +95,17 @@ const XrHitModelContainer = () => {
           dimensions={dimensions}
           onDimensionChange={handleDimensionChange}
         />
-        <p className="text-lg font-semibold mt-4">Price: ${price.toFixed(2)}</p>
+        <p className="text-lg font-semibold mt-4 text-black">Price: ${price.toFixed(2)}</p>
         <div className="flex  gap-4 mt-8">
           <button
             onClick={handleReset}
-            className="bg-gray-500 text-white px-4 py-2 w-[170px] rounded-2xl hover:bg-gray-600 transition-colors"
+            className="bg-red-500 text-white px-4 py-2 w-[170px] rounded-3xl hover:bg-red-600 transition-colors"
           >
             Reset Dimensions
           </button>
           <button
             onClick={handleSave}
-            className="bg-blue-500 text-white px-4 py-2 rounded-2xl w-[170px] hover:bg-blue-600 transition-colors"
+            className="bg-gray-500 text-white px-4 py-2 rounded-3xl w-[170px] hover:bg-gray-600 transition-colors"
           >
             Save Price
           </button>
