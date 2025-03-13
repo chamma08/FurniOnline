@@ -71,6 +71,26 @@ const ProductContextProvider = (props) => {
     }
 
     setCartItems(cartData);
+
+    if (token) {
+      axios
+        .post(
+          `${backendUrl}/api/cart/add`,
+          { itemId, size },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            toast.success(response.data.message);
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error adding item to cart:", error);
+          toast.error("Failed to add item to cart");
+        });
+    }
   };
 
   // Get total items count in cart
