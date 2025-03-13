@@ -8,9 +8,11 @@ import { RiUserLine } from "react-icons/ri";
 import { ShopContext } from "../context/ShopContext";
 import { use } from "react";
 import { motion } from "framer-motion";
+import { ProductContext } from "../context/ProductContext";
 
 const Header = () => {
-  const { token, getCartCount, navigate } = useContext(ShopContext);
+  const { getCartCount, navigate } = useContext(ShopContext);
+  const { token,setToken, CartCount} = useContext(ProductContext);
   const [menuOpened, setMenuOpened] = useState(false);
 
   const navi = useNavigate();
@@ -21,6 +23,7 @@ const Header = () => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    setToken("");
     navigate("/login");
   };
 
@@ -71,7 +74,7 @@ const Header = () => {
           <Link to="/cart" className="relative cursor-pointer flex">
             <TbBasket className="text-[27px]" />
             <span className="bg-secondary text-white text-[12px] absolute font-semibold left-1.5 -top-3.5 flexCenter w-4 h-4 rounded-full shadow-md">
-              {getCartCount()}
+             {CartCount()}
             </span>
           </Link>
           <div className="group relative">

@@ -82,8 +82,7 @@ const Add = ({ token }) => {
         setSubCategory("Living Room");
         setPopular(false);
         setImages([null, null, null, null]);
-      }
-      else {
+      } else {
         toast.error("Product could not be added");
       }
     } catch (error) {
@@ -130,7 +129,7 @@ const Add = ({ token }) => {
                   className="max-w-20 px-3 py-2 text-gray-30 ring-1 ring-slate-900/5 bg-white rounded"
                 >
                   <option value="Chair">Chair</option>
-                  <option value="">Category 2</option>
+                  <option value="Sofa">Sofa</option>
                   <option value="">Category 3</option>
                 </select>
               </div>
@@ -215,60 +214,6 @@ const Add = ({ token }) => {
             </div>
           </div>
         </div>
-        {/* <div className="flex gap-2 pt-2">
-          <label htmlFor="image1">
-            <img
-              src={image1 ? URL.createObjectURL(image1) : upload_icon}
-              alt="upload"
-              className="cursor-pointer w-16 h-16 aspect-square object-cover ring-1 ring-slate-900/5 rounded-lg"
-            />
-            <input
-              type="file"
-              id="image1"
-              className="hidden"
-              onChange={(e) => setImage1(e.target.files[0])}
-            />
-          </label>
-          <label htmlFor="image2">
-            <img
-              src={image2 ? URL.createObjectURL(image2) : upload_icon}
-              alt="upload"
-              className="cursor-pointer w-16 h-16 aspect-square object-cover ring-1 ring-slate-900/5 rounded-lg"
-            />
-            <input
-              type="file"
-              id="image2"
-              className="hidden"
-              onChange={(e) => setImage2(e.target.files[0])}
-            />
-          </label>
-          <label htmlFor="image3">
-            <img
-              src={image3 ? URL.createObjectURL(image3) : upload_icon}
-              alt="upload"
-              className="cursor-pointer w-16 h-16 aspect-square object-cover ring-1 ring-slate-900/5 rounded-lg"
-            />
-            <input
-              type="file"
-              id="image3"
-              className="hidden"
-              onChange={(e) => setImage3(e.target.files[0])}
-            />
-          </label>
-          <label htmlFor="image4">
-            <img
-              src={image4 ? URL.createObjectURL(image4) : upload_icon}
-              alt="upload"
-              className="cursor-pointer w-16 h-16 aspect-square object-cover ring-1 ring-slate-900/5 rounded-lg"
-            />
-            <input
-              type="file"
-              id="image4"
-              className="hidden"
-              onChange={(e) => setImage4(e.target.files[0])}
-            />
-          </label>
-        </div> */}
         <div className="flex gap-2 pt-2">
           {images.map((image, index) => (
             <label key={index} htmlFor={`image${index + 1}`}>

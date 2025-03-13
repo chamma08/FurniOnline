@@ -15,6 +15,8 @@ import Login from "./pages/Login";
 import Orders from "./pages/Orders";
 import Recommendations from "./pages/Recomendation";
 import ChatBot from "./pages/Chatbot";
+import Products from "./pages/Products";
+import SingleProduct from "./pages/SingleProduct";
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/collection" element={<Collection />} />
         <Route path="/product/:productId" element={<Product />} />
+        <Route path="/single-product/:productId" element={<SingleProduct />} />
+        <Route path="/products" element={<Products />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/place-order" element={<PlaceOrder />} />

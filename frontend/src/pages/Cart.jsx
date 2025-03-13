@@ -4,16 +4,17 @@ import Title from "../components/Title";
 import { FaMinus, FaPlus, FaRegWindowClose } from "react-icons/fa";
 import CartTotal from "../components/CartTotal";
 import Footer from "../components/Footer";
+import { ProductContext } from "../context/ProductContext";
 
 const Cart = () => {
   const {
     products,
     currency,
     cartItems,
-    getCartCount,
+    CartCount,
     navigate,
     updateQuantity,
-  } = useContext(ShopContext);
+  } = useContext(ProductContext);
   const [cartData, setCartData] = useState([]);
   const [quantities, setQuantities] = useState({});
 
@@ -61,7 +62,7 @@ const Cart = () => {
           <div className="flexStart gap-x-4">
             <Title title1={"Cart"} title2={"List"} titleStyles={"h3"} />
             <h5 className="medium-15 text-gray-30 relative bottom-1.5">
-              ({getCartCount()} Items)
+              ({CartCount()} Items)
             </h5>
           </div>
 

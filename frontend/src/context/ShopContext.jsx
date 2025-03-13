@@ -7,8 +7,10 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
   const currency = "$";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const delivery_charges = 15.00;
   const navigate = useNavigate();
+  /* const [products, setProducts] = useState([]) */
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
   const [token, setToken] = useState('dummytoken');
@@ -84,6 +86,25 @@ const ShopContextProvider = (props) => {
     return totalAmount;
   };
 
+  /* const getProductsData = async () => {
+    try {
+      const response = await axios.get(backendUrl + "/api/product/list");
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error while fetching products");
+    }
+  } */
+
+  /* useEffect(() => {
+    getProductsData();
+  }
+  , []); */
+
   const value = {
     currency,
     delivery_charges,
@@ -100,7 +121,8 @@ const ShopContextProvider = (props) => {
     cartItems,
     setCartItems,
     updateQuantity,
-    getCartAmount
+    getCartAmount,
+    backendUrl
   };
 
   return (
