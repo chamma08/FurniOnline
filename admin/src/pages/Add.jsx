@@ -164,15 +164,15 @@ const Add = ({ token }) => {
             <div
               onClick={() =>
                 setSizes((prev) =>
-                  prev.includes("S")
-                    ? prev.filter((item) => item !== "S")
-                    : [...prev, "S"]
+                  prev.includes("Wood")
+                    ? prev.filter((item) => item !== "Wood")
+                    : [...prev, "Wood"]
                 )
               }
             >
               <span
                 className={`${
-                  sizes.includes("S") ? "bg-tertiary text-white" : "bg-white"
+                  sizes.includes("Wood") ? "bg-tertiary text-white" : "bg-white"
                 } text-gray-30 rounded ring-1 ring-slate-900/5 px-3 py-1 cursor-pointer`}
               >
                 Wood

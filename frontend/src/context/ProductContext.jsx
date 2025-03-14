@@ -1,6 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+
 
 export const ProductContext = createContext();
 
@@ -9,7 +11,7 @@ const ProductContextProvider = (props) => {
   const currency = "$";
   const delivery_charges = 15.0;
   const [products, setProducts] = useState([]);
-  const [cartItems, setCartItems] = useState({});
+  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
 
@@ -30,12 +32,22 @@ const ProductContextProvider = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (!token && localStorage.getItem("token")) {
-      setToken(localStorage.getItem("token"));
+  const [userId, setUserId] = useState(null);
+
+useEffect(() => {
+  const storedToken = localStorage.getItem("token");
+  if (storedToken) {
+    setToken(storedToken);
+    try {
+      const decoded = jwtDecode(storedToken);
+      setUserId(decoded.id); // Extract userId from token
+    } catch (error) {
+      console.error("Error decoding token:", error);
     }
-    fetchProducts();
-  }, []);
+  }
+  fetchProducts();
+}, []);
+
 
   // Load cart from local storage
   useEffect(() => {
@@ -50,48 +62,47 @@ const ProductContextProvider = (props) => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Add item to cart
-  const addToCart = (itemId, size) => {
-    if (!size) {
+  const addToCart = async (itemId, sizes) => {
+    if (!sizes) {
       toast.error("Please select material you want");
       return;
     }
-
-    let cartData = structuredClone(cartItems);
-
-    if (cartData[itemId]) {
-      if (cartData[itemId][size]) {
-        cartData[itemId][size] += 1;
-      } else {
-        cartData[itemId][size] = 1;
-      }
-    } else {
-      cartData[itemId] = {};
-      cartData[itemId][size] = 1;
+  
+    if (!userId) {
+      toast.error("User not authenticated");
+      return;
     }
-
+  
+    let cartData = structuredClone(cartItems);
+  
+    if (!cartData[itemId]) {
+      cartData[itemId] = {};
+    }
+    cartData[itemId][sizes] = (cartData[itemId][sizes] || 0) + 1;
+  
     setCartItems(cartData);
-
+  
     if (token) {
-      axios
-        .post(
+      try {
+        const response = await axios.post(
           `${backendUrl}/api/cart/add`,
-          { itemId, size },
+          { userId, itemId, sizes }, 
           { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((response) => {
-          if (response.data.success) {
-            toast.success(response.data.message);
-          } else {
-            toast.error(response.data.message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error adding item to cart:", error);
-          toast.error("Failed to add item to cart");
-        });
+        );
+  
+        if (response.data.success) {
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+          setCartItems(structuredClone(cartData)); 
+        }
+      } catch (error) {
+        console.error("Error adding to cart:", error);
+        toast.error("Failed to add item to cart");
+      }
     }
   };
+  
 
   // Get total items count in cart
   const CartCount = () => {
@@ -151,6 +162,7 @@ const ProductContextProvider = (props) => {
     getCartAmount,
     setToken,
     token,
+    backendUrl,
   };
 
   return (

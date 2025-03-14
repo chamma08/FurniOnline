@@ -1,16 +1,22 @@
 import jwt from "jsonwebtoken";
 
 const authUser = async (req, res, next) => {
-  const token = req.header("auth-token");
-  if (!token) return res.status(401).send("Access Denied");
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Access Denied" });
+  }
+
+  const token = authHeader.split(" ")[1]; // Extract the token part
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.body.userId = verified.id;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id; // Store the decoded user ID in req.userId
     next();
   } catch (err) {
-    res.status(400).send("Invalid Token");
+    console.error(err);
+    res.status(401).json({ success: false, message: "Invalid Token" });
   }
 };
 
 export default authUser;
+
