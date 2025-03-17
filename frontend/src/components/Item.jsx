@@ -43,9 +43,10 @@ const Item = ({ product }) => {
           initial="hidden"
           whileInView="show"
           src={product.image[0]}
+          className="w-60 h-60 object-cover sm:w-48 sm:h-48 xs:w-40 xs:h-40 bg-[#f1f1f17f]"
         />
       </Link>
-      <div className="p-3 rounded-lg pt-12 bg-white shadow">
+      <div className="p-3 rounded-lg pt-12 h-52 bg-white shadow border-2 border-gray-400 ">
         <h4
           variants={fadeUp(1)}
           initial="hidden"
@@ -61,7 +62,7 @@ const Item = ({ product }) => {
             <h5 className="h5 relative bottom-0.5">4.8</h5>
           </div>
         </div>
-        <p className="line-clamp-2 py-1">{product.description}</p>
+        <p className="line-clamp-5 py-1">{product.description}</p>
       </div>
     </div>
   );

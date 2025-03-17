@@ -72,7 +72,6 @@ const Hero = () => {
         onMouseLeave={handleMouseLeave}
       >
         <div className="relative">
-          {/* Video */}
           <video
             ref={videoRef}
             src={videoFiles[currentVideo]}

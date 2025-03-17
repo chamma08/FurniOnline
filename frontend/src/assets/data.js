@@ -1,16 +1,16 @@
-import img1 from "./p1.jpg";
-import img2_1 from "./p2.jpg";
+import img1 from "./c1.png";
+import img2_1 from "./c2.png";
 import img2_2 from "./product_2_2.png";
 import img2_3 from "./product_2_3.png";
 import img2_4 from "./product_2_4.png";
-import img3 from "./p3.jpg";
-import img4_1 from "./p1.jpg";
+import img3 from "./c4.png";
+import img4_1 from "./c5.png";
 import img4_2 from "./product_4_2.png";
 import img4_3 from "./product_4_3.png";
 import img4_4 from "./product_4_4.png";
-import img5 from "./p2.jpg";
-import img6 from "./p1.jpg";
-import img7 from "./p3.jpg";
+import img5 from "./c3.png";
+import img6 from "./s6.png";
+import img7 from "./s2.png";
 import img8 from "./p1.jpg";
 import img9 from "./p2.jpg";
 import img10 from "./p1.jpg";
@@ -69,41 +69,43 @@ import chair2 from "../assets/models/chair2.glb";
 import chair3 from "../assets/models/chair3.glb";
 import chair4 from "../assets/models/chair4.glb";
 import chair5 from "../assets/models/chair5.glb";
+import sofa1 from "../assets/models/sofa.glb";
+import sofa2 from "../assets/models/sofa.glb";
 
 export const products = [
   {
     _id: "1",
-    name: "Furniture 1",
+    name: "Bellino Wing Chair",
     description:
-      "This lightweight cotton top is perfect for casual outings, featuring a relaxed fit and durable material.",
+      "This is truly a statement piece best suited for large living spaces to bring out a feeling of royalty and old-world charm",
     price: 150,
     image: [img1],
     category: "Women",
     subCategory: "Topwear",
     sizes: ["Wood", "Metal", "Plastic"],
     date: 1716634345448,
-    popular: false,
+    popular: true,
     model: [chair1],
   },
   {
     _id: "2",
-    name: "Furniture 2",
+    name: "Wendy Chair",
     description:
-      "A premium t-shirt offering exceptional comfort and a smooth texture, great for everyday wear.",
+      " At the moment this product is made to order only. Kindly send us a web inquiry or get in touch using the below details to place an order",
     price: 220,
     image: [img2_1 /* , img2_2, img2_3, img2_4 */],
     category: "Men",
     subCategory: "Winterwear",
     sizes: ["Wood", "Metal", "Plastic"],
     date: 1716621345448,
-    popular: false,
+    popular: true,
     model: [chair2],
   },
   {
     _id: "3",
-    name: "Furniture 3",
+    name: "Adjustable Counter Stool",
     description:
-      "Soft cotton top for girls, ideal for both active play and relaxation.",
+      "This sleek bar chair features a smooth, curved design that blends style and comfort. Its 360-degree rotation allows for easy movement and flexibility, making it perfect for any social setting.",
     price: 200,
     image: [img3],
     category: "Kids",
@@ -115,9 +117,9 @@ export const products = [
   },
   {
     _id: "4",
-    name: "Furniture 4",
+    name: "Euclid Velvet Accent Chair",
     description:
-      "A casual t-shirt made from breathable cotton, suitable for any informal occasion.",
+      "Add this side chair to your living room ensemble and give it some contemporary glam appeal. ",
     price: 180,
     image: [img4_1 /* , img4_2, img4_3, img4_4 */],
     category: "Men",
@@ -129,9 +131,9 @@ export const products = [
   },
   {
     _id: "5",
-    name: "Furniture 5",
+    name: "Executive Chair",
     description:
-      "An everyday essential cotton tee for women, offering simplicity and comfort.",
+      "Executive office chair, ergonomic office chair with adjustable lumbar back support, big and tall office chair with massage and heat, diamond-stitched cushion leather home office desk chair",
     price: 140,
     image: [img5],
     category: "Women",
@@ -143,7 +145,7 @@ export const products = [
   },
   {
     _id: "6",
-    name: "Furniture 6",
+    name: "Beverly Sofa",
     description:
       "Fun and vibrant graphic tee, perfect for kids’ outdoor play and adventures.",
     price: 160,
@@ -153,12 +155,13 @@ export const products = [
     sizes: ["XS", "S", "M"],
     date: 1716623345448,
     popular: true,
+    model: [sofa1],
   },
   {
     _id: "7",
-    name: "Furniture 1",
+    name: "Grace Sofa",
     description:
-      "A comfortable, lightweight knit sweater ideal for layering during cool weather.",
+      "Grace Sofa exudes comfort with its upbeat design. It is completed with a plush arrangement of matching cusions that lends a soft warmth to any living room space.",
     price: 320,
     image: [img7],
     category: "Women",
@@ -166,6 +169,7 @@ export const products = [
     sizes: ["S", "M", "L", "XL"],
     date: 1716624345448,
     popular: true,
+    model: [sofa2],
   },
   {
     _id: "8",
@@ -178,7 +182,7 @@ export const products = [
     subCategory: "Winterwear",
     sizes: ["M", "L", "XL", "XXL"],
     date: 1716625345448,
-    popular: true,
+    popular: false,
   },
   {
     _id: "9",
@@ -191,7 +195,7 @@ export const products = [
     subCategory: "Topwear",
     sizes: ["S", "M", "L"],
     date: 1716626345448,
-    popular: true,
+    popular: false,
   },
   {
     _id: "10",

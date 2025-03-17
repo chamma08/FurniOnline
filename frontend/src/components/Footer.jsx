@@ -73,7 +73,8 @@ const Footer = () => {
             We are always here to help
           </motion.h4>
           <motion.p variants={fadeUp(1)} initial="hidden" whileInView="show">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae.
+            Need assistance? Our team is here to support you with any inquiries
+            anytime!
           </motion.p>
         </div>
         <div className="flexStart flex-wrap gap-8">
@@ -146,8 +147,8 @@ const Footer = () => {
             Furni<span className="text-secondary">Online</span>
           </div>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas
-            earum reprehenderit possimus!
+            Discover stylish and functional furniture designed to elevate your
+            space with comfort and elegance
           </p>
         </div>
         <div className="flexStart gap-7 xl:gap-x-36 flex-wrap">
