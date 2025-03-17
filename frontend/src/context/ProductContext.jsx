@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
-
+import { useNavigate } from "react-router-dom";
 
 export const ProductContext = createContext();
 
@@ -14,6 +14,7 @@ const ProductContextProvider = (props) => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
+  const navigate = useNavigate();
 
   // Fetch products from MongoDB
   const fetchProducts = async () => {
@@ -34,20 +35,19 @@ const ProductContextProvider = (props) => {
 
   const [userId, setUserId] = useState(null);
 
-useEffect(() => {
-  const storedToken = localStorage.getItem("token");
-  if (storedToken) {
-    setToken(storedToken);
-    try {
-      const decoded = jwtDecode(storedToken);
-      setUserId(decoded.id); // Extract userId from token
-    } catch (error) {
-      console.error("Error decoding token:", error);
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      try {
+        const decoded = jwtDecode(storedToken);
+        setUserId(decoded.id); // Extract userId from token
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
     }
-  }
-  fetchProducts();
-}, []);
-
+    fetchProducts();
+  }, []);
 
   // Load cart from local storage
   useEffect(() => {
@@ -64,41 +64,42 @@ useEffect(() => {
 
   const addToCart = async (itemId, sizes) => {
     if (!sizes) {
-      toast.error("Please select material you want");
+      toast.error("Please select a material.");
       return;
     }
   
     if (!userId) {
-      toast.error("User not authenticated");
+      toast.error("User not authenticated.");
       return;
     }
   
-    let cartData = structuredClone(cartItems);
+    let cartData = { ...cartItems };
   
     if (!cartData[itemId]) {
       cartData[itemId] = {};
     }
-    cartData[itemId][sizes] = (cartData[itemId][sizes] || 0) + 1;
   
+    cartData[itemId][sizes] = (cartData[itemId][sizes] || 0) + 1;
     setCartItems(cartData);
   
     if (token) {
       try {
         const response = await axios.post(
           `${backendUrl}/api/cart/add`,
-          { userId, itemId, sizes }, 
+          { userId, itemId, sizes },
           { headers: { Authorization: `Bearer ${token}` } }
         );
   
         if (response.data.success) {
-          toast.success(response.data.message);
+          toast.success("Item added to cart.");
         } else {
           toast.error(response.data.message);
-          setCartItems(structuredClone(cartData)); 
+          setCartItems({ ...cartItems }); // Revert changes if API fails
         }
       } catch (error) {
         console.error("Error adding to cart:", error);
-        toast.error("Failed to add item to cart");
+        toast.error("Failed to add item.");
+        setCartItems({ ...cartItems }); // Revert on error
       }
     }
   };
@@ -122,15 +123,38 @@ useEffect(() => {
   };
 
   // Update quantity of an item
-  const updateQuantity = (itemId, size, quantity) => {
-    let cartData = structuredClone(cartItems);
-    if (cartData[itemId] && cartData[itemId][size]) {
-      cartData[itemId][size] = quantity;
+  const updateQuantity = (itemId, sizes, quantity) => {
+    let cartData = { ...cartItems };
+  
+    if (cartData[itemId] && cartData[itemId][sizes]) {
+      cartData[itemId][sizes] = quantity;
     }
+  
     setCartItems(cartData);
+  
+    if (token) {
+      axios
+        .post(
+          `${backendUrl}/api/cart/update`,
+          { userId, itemId, sizes, quantity },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+        .then((response) => {
+          if (!response.data.success) {
+            toast.error(response.data.message);
+            setCartItems({ ...cartItems });
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating cart:", error);
+          toast.error("Failed to update cart.");
+          setCartItems({ ...cartItems }); 
+        });
+    }
   };
+  
 
-  // Get total cart amount
+  
   const getCartAmount = () => {
     let totalAmount = 0;
     for (const items in cartItems) {
@@ -150,6 +174,28 @@ useEffect(() => {
     return totalAmount;
   };
 
+  const getUserCart = async () => {
+    if (!userId) {
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${backendUrl}/api/cart/${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.success) {
+        setCartItems(response.data.cart);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      toast.error("Failed to fetch cart");
+    }
+  }
+
   const value = {
     currency,
     delivery_charges,
@@ -163,6 +209,10 @@ useEffect(() => {
     setToken,
     token,
     backendUrl,
+    getUserCart,
+    userId,
+    navigate,
+    setCartItems
   };
 
   return (

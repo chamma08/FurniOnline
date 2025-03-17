@@ -55,15 +55,39 @@ const updateCart = async (req, res) => {
   try {
     const { userId, itemId, sizes, quantity } = req.body;
 
-    const userData = await userModel.findById(userId);
-    const cartData = await userData.cartData;
+    // Validate required fields
+    if (!userId || !itemId || sizes === undefined || quantity === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+    }
 
+    // Fetch user
+    const userData = await userModel.findById(userId);
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Ensure cartData is initialized
+    let cartData = userData.cartData || {};
+
+    // Ensure cartData[itemId] is initialized
+    if (!cartData[itemId]) {
+      cartData[itemId] = {};
+    }
+
+    // Update the quantity for the specified size
     cartData[itemId][sizes] = quantity;
 
+    // Save the updated cartData
     await userModel.findByIdAndUpdate(userId, { cartData });
+
     res.json({ success: true, message: "Cart updated" });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating cart:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 

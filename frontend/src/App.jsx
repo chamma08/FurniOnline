@@ -17,6 +17,7 @@ import Recommendations from "./pages/Recomendation";
 import ChatBot from "./pages/Chatbot";
 import Products from "./pages/Products";
 import SingleProduct from "./pages/SingleProduct";
+import Verify from "./pages/Verify";
 
 const App = () => {
   return (
@@ -36,9 +37,10 @@ const App = () => {
         {/*  <Route path="/ar-view/:productId" element={<ArView />} /> */}
         <Route path="/arview" element={<XrHitModelContainer />} />
         <Route path="/ai-assistant" element={<ChatBot />} />
-        <Route path="//mailto:info@furnionline.com" element={<Contact />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/verify" element={<Verify />} />
       </Routes>
     </main>
   );

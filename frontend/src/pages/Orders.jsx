@@ -1,16 +1,61 @@
 import React, { useContext, useEffect, useState } from "react";
 import Title from "../components/Title";
-import { ShopContext } from "../context/ShopContext";
 import Footer from "../components/Footer";
+import { ProductContext } from "../context/ProductContext";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const Orders = () => {
-  const { products, currency, quantity } = useContext(ShopContext);
+  const { products, currency, quantity, backendUrl, token } =
+    useContext(ProductContext);
   const [orderData, setOrderData] = useState([]);
 
+  const loadOrderData = async () => {
+    try {
+      if (!token) return;
+
+      const decoded = jwtDecode(token);
+      const userId = decoded?.id;
+
+      const response = await axios.post(
+        `${backendUrl}/api/order/userorders`,
+        { userId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log("Full API Response:", response.data); // Debugging log
+
+      if (response.status === 200 && Array.isArray(response.data)) {
+        let allOrdersItem = [];
+
+        response.data.forEach((order) => {
+          order.items?.forEach((item) => {
+            allOrdersItem.push({
+              ...item,
+              date: order.date,
+              status: order.status,
+              paymentMethod: order.paymentMethod,
+              payment: order.payment,
+            });
+          });
+        });
+
+        console.log("Processed Orders:", allOrdersItem); // Debugging log
+        setOrderData(allOrdersItem.reverse());
+      }
+    } catch (error) {
+      console.error(
+        "Error fetching orders:",
+        error.response?.data || error.message
+      );
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
+
   useEffect(() => {
-    const data = products.slice(0, 5);
-    setOrderData(data);
-  }, [products]);
+    loadOrderData();
+  }, [token]);
 
   return (
     <div>
@@ -45,8 +90,8 @@ const Orders = () => {
                             <p>{item.quantity}</p>
                           </div>
                           <div className="flexCenter gap-x-2">
-                            <h5 className="medium-14">Meterial:</h5>
-                            <p>{item.size}</p>
+                            <h5 className="medium-14">Material:</h5>
+                            <p>{item.sizes}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-x-2">
@@ -55,7 +100,7 @@ const Orders = () => {
                         </div>
                         <div className="flex items-center gap-x-2">
                           <h5 className="medium-14">Payment</h5>
-                          <p>{"dummy"}</p>
+                          <p>{item.paymentMethod}</p>
                         </div>
                       </div>
                       <div className="flex gap-3">
@@ -63,7 +108,7 @@ const Orders = () => {
                           <p className="min-w-2 h-2 rounded-full bg-green-500"></p>
                           <p>{item.status}</p>
                         </div>
-                        <button className="btn-secondary !p-1.5 !py-1 !text-sm">
+                        <button onClick={loadOrderData} className="btn-secondary !p-1.5 !py-1 !text-sm">
                           Track Order
                         </button>
                       </div>

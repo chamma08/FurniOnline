@@ -7,14 +7,8 @@ import Footer from "../components/Footer";
 import { ProductContext } from "../context/ProductContext";
 
 const Cart = () => {
-  const {
-    products,
-    currency,
-    cartItems,
-    CartCount,
-    navigate,
-    updateQuantity,
-  } = useContext(ProductContext);
+  const { products, currency, cartItems, CartCount, navigate, updateQuantity } =
+    useContext(ProductContext);
   const [cartData, setCartData] = useState([]);
   const [quantities, setQuantities] = useState({});
 
@@ -113,7 +107,7 @@ const Cart = () => {
                         </div>
                         <h4 className="h4">
                           {currency}
-                          {productData.price}
+                          {productData.price * quantities[key]}
                         </h4>
                       </div>
                     </div>
