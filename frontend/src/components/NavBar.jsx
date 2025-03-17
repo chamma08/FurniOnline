@@ -5,10 +5,9 @@ const NavBar = ({ containerStyles }) => {
   const navLinks = [
     { title: "Home", path: "/" },
     { title: "Collection", path: "/collection" },
-    /* { title: "Testimonials", path: "/testimonials" }, */
     { title: "Products", path: "/products" },
     { title: "About", path: "/about" },
-    { title: "Contact", path: "/mailto:info@furnionline.com" },
+    { title: "Contact", path: "/contact" },
   ];
 
   return (
