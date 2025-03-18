@@ -142,6 +142,7 @@ const Hero = () => {
           initial="hidden"
           whileInView="show"
           className="h1 font-[500] capitalize max-w-[722px] text-white"
+          style={{ fontFamily: "'Dancing Script', cursive" }}
         >
           Visualise furniture in your space with AR
         </motion.h1>

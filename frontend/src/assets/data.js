@@ -12,7 +12,7 @@ import img5 from "./c3.png";
 import img6 from "./s6.png";
 import img7 from "./s2.png";
 import img8 from "./p1.jpg";
-import img9 from "./p2.jpg";
+import img9 from "./p4.jpg";
 import img10 from "./p1.jpg";
 import img11 from "./product_11.png";
 import img12 from "./product_12.png";
@@ -71,6 +71,8 @@ import chair4 from "../assets/models/chair4.glb";
 import chair5 from "../assets/models/chair5.glb";
 import sofa1 from "../assets/models/sofa.glb";
 import sofa2 from "../assets/models/sofa.glb";
+import c from "../assets/models/2.glb";
+import c2 from "../assets/models/1.glb";
 
 export const products = [
   {
@@ -147,12 +149,12 @@ export const products = [
     _id: "6",
     name: "Beverly Sofa",
     description:
-      "Fun and vibrant graphic tee, perfect for kids’ outdoor play and adventures.",
+      "Add this side chair to your living room ensemble and give it some contemporary glam appeal.",
     price: 160,
     image: [img6],
     category: "Men",
     subCategory: "Winterwear",
-    sizes: ["XS", "S", "M"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716623345448,
     popular: true,
     model: [sofa1],
@@ -166,36 +168,38 @@ export const products = [
     image: [img7],
     category: "Women",
     subCategory: "Bottomwear",
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716624345448,
     popular: true,
     model: [sofa2],
   },
   {
     _id: "8",
-    name: "Furniture 1",
+    name: "Orange Chair",
     description:
-      "Warm and comfortable hoodie with an adjustable hood and front pockets.",
+      "Add this side chair to your living room ensemble and give it some contemporary glam appeal.",
     price: 420,
     image: [img8],
     category: "Men",
     subCategory: "Winterwear",
-    sizes: ["M", "L", "XL", "XXL"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716625345448,
     popular: false,
+    model: [c],
   },
   {
     _id: "9",
-    name: "Furniture 1",
+    name: "Wing Chair",
     description:
-      "A casual hoodie designed for boys, featuring a soft material for all-day comfort.",
+      "Add this side chair to your living room ensemble and give it some contemporary glam appeal.",
     price: 230,
     image: [img9],
     category: "Kids",
     subCategory: "Topwear",
-    sizes: ["S", "M", "L"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716626345448,
     popular: false,
+    model: [c2],
   },
   {
     _id: "10",
@@ -206,7 +210,7 @@ export const products = [
     image: [img10],
     category: "Men",
     subCategory: "Bottomwear",
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["Wood", "Metal", "Plastic"],
     date: 1716627345448,
     popular: false,
   },
