@@ -5,41 +5,7 @@ import { FaFileUpload, FaRegCheckCircle, FaSearch } from "react-icons/fa";
 import { FaCircleNotch } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
-const fadeDown = (delay) => ({
-  hidden: { opacity: 0, y: -100 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { delay: delay, duration: 0.5 },
-  },
-});
-
-const fadeUp = (delay) => ({
-  hidden: { opacity: 0, y: 100 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { delay: delay, duration: 0.5 },
-  },
-});
-
-const fadeRight = (delay) => ({
-  hidden: { opacity: 0, x: -100 },
-  show: {
-    opacity: 1,
-    x: 0,
-    transition: { delay: delay, duration: 0.5 },
-  },
-});
-
-const fadeLeft = (delay) => ({
-  hidden: { opacity: 0, x: 100 },
-  show: {
-    opacity: 1,
-    x: 0,
-    transition: { delay: delay, duration: 0.5 },
-  },
-});
+const text = "AI Product Recommendations";
 
 const Recommendations = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -105,37 +71,20 @@ const Recommendations = () => {
       <div className="bg-primary mb-16 bg-rc bg-cover bg-center bg-no-repeat w-full">
         <div className="max-padd-container py-10">
           <h1 className="h1 font-[300] capitalize max-w-[722px] text-black">
-            <motion.span
-              variants={fadeLeft(0.6)}
-              initial="hidden"
-              whileInView="show"
-              className="font-bold text-blue-900"
-            >
-              AI{" "}
-            </motion.span>
-            <motion.span
-              variants={fadeDown(0.8)}
-              initial="hidden"
-              whileInView="show"
-            >
-              Product
-            </motion.span>
-            <motion.span
-              variants={fadeDown(0.9)}
-              initial="hidden"
-              whileInView="show"
-            >
-              {" "}
-              Recommendations
-            </motion.span>
+            {text.split("").map((char, index) => (
+              <motion.span
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.4 }} 
+                className={index < 2 ? "font-bold text-blue-900" : ""} 
+              >
+                {char}
+              </motion.span>
+            ))}
           </h1>
           <div className="flex items-center gap-x-4 mt-6 mb-10">
-            <motion.div
-              variants={fadeUp(1.2)}
-              initial="hidden"
-              whileInView="show"
-              className="relative inline-block"
-            >
+            <di className="relative inline-block">
               <input
                 type="file"
                 accept="image/*"
@@ -159,11 +108,8 @@ const Recommendations = () => {
                   </>
                 )}
               </div>
-            </motion.div>
-            <motion.button
-              variants={fadeUp(1.4)}
-              initial="hidden"
-              whileInView="show"
+            </di>
+            <button
               onClick={fetchRecommendations}
               disabled={!selectedImage}
               className={`${
@@ -173,11 +119,8 @@ const Recommendations = () => {
               } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
             >
               Search <FaSearch />
-            </motion.button>
-            <motion.button
-              variants={fadeUp(1.6)}
-              initial="hidden"
-              whileInView="show"
+            </button>
+            <button
               onClick={handleReset}
               disabled={!selectedImage}
               className={`${
@@ -187,7 +130,7 @@ const Recommendations = () => {
               } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
             >
               Reset <FaCircleNotch />
-            </motion.button>
+            </button>
           </div>
 
           {uploadedImageURL && (
