@@ -18,6 +18,7 @@ import ChatBot from "./pages/Chatbot";
 import Products from "./pages/Products";
 import SingleProduct from "./pages/SingleProduct";
 import Verify from "./pages/Verify";
+import About from "./pages/About";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/products" element={<Products />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/about" element={<About />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/recommendations" element={<Recommendations />} />
         {/*  <Route path="/ar-view/:productId" element={<ArView />} /> */}
