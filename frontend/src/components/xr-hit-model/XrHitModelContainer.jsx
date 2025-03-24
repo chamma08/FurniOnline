@@ -11,7 +11,7 @@ const XrHitModelContainer = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const modelPath = queryParams.get("model");
-  const [color, setColor] = useState("#ffffff");
+  const [color, setColor] = useState("");
   const [dimensions, setDimensions] = useState({
     width: 1,
     height: 1,
@@ -113,10 +113,14 @@ const XrHitModelContainer = () => {
         <Canvas
           style={{
             width: "100%",
-            height: "300px",
+            height: "500px",
             borderRadius: "8px",
             cursor: "pointer",
             marginTop: "40px",
+            backgroundColor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+
           }}
           dpr={[1, 2]}
           camera={{ position: [0, 0, 3], fov: 30 }}

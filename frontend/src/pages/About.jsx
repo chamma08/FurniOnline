@@ -57,26 +57,26 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
             <div className="col-span-1">
               <img
-                src="/src/assets/1.png"
+                src="/1.png"
                 alt="Interior design"
                 className="w-full h-full object-cover rounded-md"
               />
             </div>
             <div className="col-span-1">
               <img
-                src="/src/assets/b4.png"
+                src="/b4.png"
                 alt="Modern furniture"
                 className="w-full h-full object-cover rounded-md"
               />
             </div>
             <div className="col-span-1 grid grid-rows-2 gap-4">
               <img
-                src="/src/assets/bg.jpg"
+                src="/bg.jpg"
                 alt="Chair design"
                 className="w-full h-full object-cover rounded-md"
               />
               <img
-                src="/src/assets/b3.png"
+                src="/b3.png"
                 alt="Living room"
                 className="w-full h-full object-cover rounded-md"
               />

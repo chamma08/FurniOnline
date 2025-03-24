@@ -29,7 +29,7 @@ export default function Model({ position, modelPath, color, dimensions = { width
         }}
         object={gltf.scene}
         scale={[dimensions.width, dimensions.height, dimensions.depth]}
-        position={position}
+        position={[0, -0.4, 0]}
       />
     </Suspense>
   );

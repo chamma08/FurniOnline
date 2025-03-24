@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { Interactive, useHitTest, useXR } from '@react-three/xr';
 import Model from './Model';
 import { useThree } from '@react-three/fiber';
@@ -46,7 +46,8 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
 
   return (
     <>
-      <OrbitControls />
+      <OrbitControls /* autoRotate *//>
+      <PerspectiveCamera position={[0,1,4]} zoom={0.8}/>
       <ambientLight />
       {isPresenting &&
         models.map(({ position, id }) => {
