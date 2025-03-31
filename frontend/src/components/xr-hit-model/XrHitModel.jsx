@@ -12,18 +12,22 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
   const { isPresenting } = useXR();
   const { camera } = useThree();
 
+  // Adjust model scale for better fit
+  const modelScale = [1, 1, 1]; // Reduced from 5 to 1 for better fit
+
   useEffect(() => {
     if (isPresenting) {
-      camera.fov = 50; 
+      camera.fov = 60; // Increased FOV for better visibility in AR
     } else {
-      camera.fov = 30; 
+      camera.fov = 45; // Moderate FOV for non-AR view
     }
     camera.updateProjectionMatrix(); 
   }, [isPresenting, camera]);
 
   useThree(({ camera }) => {
     if (!isPresenting) {
-      camera.position.z = 3;
+      // Position camera for better view in non-AR mode
+      camera.position.set(0, 0.5, 2); // Closer to the model and slightly elevated
     }
   });
 
@@ -35,9 +39,6 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
         placementModelRef.current.quaternion,
         placementModelRef.current.scale
       );
-      
-      // Adjust position if needed
-      placementModelRef.current.position.y -= 0.1;
       
       // Update placement position state
       setPlacementPosition(placementModelRef.current.position.clone());
@@ -59,10 +60,18 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
 
   return (
     <>
-      <OrbitControls />
-      <PerspectiveCamera position={[0, 1, 4]} zoom={0.8} />
+      <OrbitControls 
+        enableZoom={!isPresenting}
+        enablePan={!isPresenting}
+        enableRotate={!isPresenting}
+        target={[0, 0, 0]} // Center the controls
+      />
+      <PerspectiveCamera position={[0, 0.5, 2]} zoom={1} />
+      
+      {/* Better lighting for model visibility */}
       <ambientLight intensity={0.8} />
-      <directionalLight position={[5, 5, 5]} intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={0.8} />
+      <directionalLight position={[-5, 5, -5]} intensity={0.5} />
       
       {/* Display preview model in non-AR mode */}
       {!isPresenting && (
@@ -70,7 +79,8 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
           modelPath={modelPath} 
           color={color} 
           dimensions={dimensions} 
-          scale={[5, 5, 5]}
+          scale={modelScale}
+          position={[0, 0, 0]} // Centered position
         />
       )}
 
@@ -84,9 +94,10 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 modelPath={modelPath}
                 color={color}
                 dimensions={dimensions}
-                scale={[5, 5, 5]}
+                scale={modelScale}
                 opacity={0.5}
                 isGhost={true}
+                position={[0, 0, 0]} // Position will be set by hit test
               />
             </group>
           </Interactive>
@@ -99,7 +110,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
               modelPath={modelPath}
               color={modelColor || color}
               dimensions={modelDimensions || dimensions}
-              scale={[5, 5, 5]}
+              scale={modelScale}
             />
           ))}
         </>

@@ -111,12 +111,18 @@ const XrHitModelContainer = () => {
             borderRadius: "8px",
             cursor: "pointer",
             marginTop: "40px",
-            backgroundColor: "white",
+            backgroundColor: "#f8f8f8", // Lighter background for better visibility
             alignItems: "center",
             justifyContent: "center",
           }}
           dpr={[1, 2]}
-          camera={{ position: [0, 0, 3], fov: 30 }}
+          camera={{ 
+            position: [0, 0.5, 2], // Moved camera closer and slightly elevated
+            fov: 45, // Wider field of view
+            near: 0.1,
+            far: 1000
+          }}
+          shadows // Enable shadows for better visuals
         >
           <XR>
             <XrHitModel
@@ -129,7 +135,11 @@ const XrHitModelContainer = () => {
         <ColorPicker onColorChange={handleColorChange} />
         <div className="flex justify-center">
           <ARButton
-            sessionInit={{ requiredFeatures: ["hit-test"] }}
+            sessionInit={{ 
+              requiredFeatures: ["hit-test"],
+              optionalFeatures: ["dom-overlay"],
+              domOverlay: { root: document.body }
+            }}
             style={{
               backgroundColor: "black",
               border: "none",
