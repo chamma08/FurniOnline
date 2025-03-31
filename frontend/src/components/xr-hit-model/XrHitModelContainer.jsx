@@ -24,11 +24,6 @@ const XrHitModelContainer = () => {
     setColor(newColor);
   };
 
-  /* const calculatePrice = (dimensions, basePrice) => {
-    const volume = dimensions.width * dimensions.height * dimensions.depth;
-    return basePrice * volume;
-  }; */
-
   const handleDimensionChange = (dimension, value) => {
     let newDimensions = { ...dimensions };
     let scaleFactor = 0.2; // Other dimensions adjust by 20% of the change
@@ -67,7 +62,6 @@ const XrHitModelContainer = () => {
     return basePrice * volume;
   };
   
-
   const handleReset = () => {
     setDimensions({ width: 1, height: 1, depth: 1 });
     setPrice(productPrice); 
@@ -96,7 +90,7 @@ const XrHitModelContainer = () => {
           onDimensionChange={handleDimensionChange}
         />
         <p className="text-lg font-semibold mt-4 text-black">Price: ${price.toFixed(2)}</p>
-        <div className="flex  gap-4 mt-8">
+        <div className="flex gap-4 mt-8">
           <button
             onClick={handleReset}
             className="bg-red-500 text-white px-4 py-2 w-[170px] rounded-3xl hover:bg-red-600 transition-colors"
@@ -120,7 +114,6 @@ const XrHitModelContainer = () => {
             backgroundColor: "white",
             alignItems: "center",
             justifyContent: "center",
-
           }}
           dpr={[1, 2]}
           camera={{ position: [0, 0, 3], fov: 30 }}

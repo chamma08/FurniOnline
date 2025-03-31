@@ -80,8 +80,8 @@ export const ContactForm = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-sm">
-      <h1 className="text-3xl font-bold text-center text-yellow-500 mb-2">Contact Us</h1>
+    <div className="w-full max-w-4xl mx-auto p-6 bg-white border-2 border-blue-950 rounded-lg shadow-sm">
+      <h1 className="text-3xl font-bold text-center text-cyan-600 mb-2">Contact Us</h1>
       <p className="text-gray-600 text-center mb-8">
         Any question or remarks? Just write us a message!
       </p>
@@ -172,7 +172,7 @@ export const ContactForm = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#011C2A] text-white py-3 px-8 rounded-md hover:bg-opacity-90 transition-all disabled:opacity-50"
+            className="bg-[#011C2A] text-white py-3 px-8 rounded-2xl hover:bg-opacity-90 transition-all disabled:opacity-50"
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </button>

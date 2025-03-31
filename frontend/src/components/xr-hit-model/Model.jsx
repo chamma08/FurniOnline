@@ -1,9 +1,18 @@
 import React, { Suspense, useRef, useEffect } from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshStandardMaterial } from "three";
 
-export default function Model({ position, modelPath, color, dimensions = { width: 1, height: 1, depth: 1 } }) {
+export default function Model({ 
+  position, 
+  modelPath, 
+  color, 
+  dimensions = { width: 1, height: 1, depth: 1 },
+  scale = [5, 5, 5],
+  opacity = 1,
+  isGhost = false
+}) {
   const group = useRef();
   const gltf = useLoader(GLTFLoader, modelPath || "/models/default.glb");
 
@@ -11,25 +20,31 @@ export default function Model({ position, modelPath, color, dimensions = { width
     if (gltf.scene) {
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
-          child.material.color.set(color); 
+          // Create a new material to avoid modifying the original
+          const newMaterial = new MeshStandardMaterial({
+            color: color || child.material.color,
+            transparent: isGhost,
+            opacity: opacity,
+          });
+          
+          // Apply the new material
+          child.material = newMaterial;
         }
       });
     }
-  }, [gltf.scene, color]);
+  }, [gltf.scene, color, opacity, isGhost]);
 
   return (
     <Suspense fallback={null}>
       <primitive
-        style={{
-          width: "100%",
-          height: "400px",
-          borderRadius: "8px",
-          cursor: "pointer",
-          margintop: "40px",
-        }}
-        object={gltf.scene}
-        scale={[dimensions.width, dimensions.height, dimensions.depth]}
-        position={[0, -0.4, 0]}
+        ref={group}
+        object={gltf.scene.clone()}
+        scale={[
+          dimensions.width * scale[0], 
+          dimensions.height * scale[1], 
+          dimensions.depth * scale[2]
+        ]}
+        position={position || [0, -0.4, 0]}
       />
     </Suspense>
   );

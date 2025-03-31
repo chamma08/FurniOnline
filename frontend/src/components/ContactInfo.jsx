@@ -15,13 +15,13 @@ export const ContactInfo = () => {
       {/* Contact Details */}
       <div className="space-y-6 flex-1">
         <ContactItem icon={<Phone size={22} />} text="+94 775434 344" />
-        <ContactItem icon={<Mail size={22} />} text="spmfashion@gmail.com" />
+        <ContactItem icon={<Mail size={22} />} text="furnionline@gmail.com" />
         <ContactItem 
           icon={<MapPin size={22} />} 
           text={
             <>
               132 Colombo Street, <br />
-              Massachusetts
+              Colombo
             </>
           } 
         />

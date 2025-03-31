@@ -1,5 +1,6 @@
 import React from "react";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 const About = () => {
   return (
@@ -13,11 +14,11 @@ const About = () => {
                 Experience the future of furniture shopping with our AR and AI-powered solutions.
               </p>
             </div>
-            <div>
+            <Link to="/contact">
               <button className="bg-teal-500 text-white px-6 py-3 rounded-md shadow-md hover:bg-teal-600 transition">
                 Contact Us
               </button>
-            </div>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

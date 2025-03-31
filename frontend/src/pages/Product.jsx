@@ -100,12 +100,12 @@ const Product = () => {
               </div>
             </div>
             <div className="flex items-center gap-x-4">
-              <button
+              {/* <button
                 className="bg-secondary !rounded-lg text-white sm:w-1/2 p-2 flexCenter gap-x-2 capitalize"
                 onClick={() => addToCart(product._id, size)}
               >
                 Add to cart <TbShoppingBagPlus />
-              </button>
+              </button> */}
               <button className="btn-light !rounded-lg !py-3.5 gap-x-2">
                 <FaHeart />
               </button>

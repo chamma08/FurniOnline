@@ -74,7 +74,7 @@ const SingleProduct = () => {
                   key={i}
                   onClick={() => setSize(item)}
                   className={`border py-1 px-4 rounded-lg ${
-                    size === item ? "bg-blue-500 text-white" : "border-gray-300"
+                    size === item ? "bg-black text-white" : "border-gray-300"
                   }`}
                 >
                   {item}
