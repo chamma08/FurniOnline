@@ -13,21 +13,20 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
   const { camera } = useThree();
 
   // Adjust model scale for better fit
-  const modelScale = [1, 1, 1]; // Reduced from 5 to 1 for better fit
+  const modelScale = [1, 1, 1];
 
   useEffect(() => {
     if (isPresenting) {
-      camera.fov = 60; // Increased FOV for better visibility in AR
+      camera.fov = 60;
     } else {
-      camera.fov = 45; // Moderate FOV for non-AR view
+      camera.fov = 45;
     }
     camera.updateProjectionMatrix(); 
   }, [isPresenting, camera]);
 
   useThree(({ camera }) => {
     if (!isPresenting) {
-      // Position camera for better view in non-AR mode
-      camera.position.set(0, 0.5, 2); // Closer to the model and slightly elevated
+      camera.position.set(0, 0.5, 2);
     }
   });
 
@@ -56,16 +55,29 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
     
     // Add the new model to the array of placed models
     setModels([...models, newModel]);
+    
+    // Briefly show a placement indicator
+    showPlacementIndicator(placementPosition);
+  };
+  
+  // Show a brief visual indicator when placement occurs
+  const showPlacementIndicator = (position) => {
+    // This would be implemented with a visual effect at the position
+    // For now, we'll just log the placement
+    console.log('Model placed at:', position);
   };
 
   return (
     <>
-      <OrbitControls 
-        enableZoom={!isPresenting}
-        enablePan={!isPresenting}
-        enableRotate={!isPresenting}
-        target={[0, 0, 0]} // Center the controls
-      />
+      {!isPresenting && (
+        <OrbitControls 
+          enableZoom={true}
+          enablePan={true}
+          enableRotate={true}
+          target={[0, 0, 0]}
+        />
+      )}
+      
       <PerspectiveCamera position={[0, 0.5, 2]} zoom={1} />
       
       {/* Better lighting for model visibility */}
@@ -80,7 +92,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
           color={color} 
           dimensions={dimensions} 
           scale={modelScale}
-          position={[0, 0, 0]} // Centered position
+          position={[0, 0, 0]}
         />
       )}
 
@@ -95,9 +107,8 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 color={color}
                 dimensions={dimensions}
                 scale={modelScale}
-                opacity={0.5}
+                opacity={0.6}
                 isGhost={true}
-                position={[0, 0, 0]} // Position will be set by hit test
               />
             </group>
           </Interactive>

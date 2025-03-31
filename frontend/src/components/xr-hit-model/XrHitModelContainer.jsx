@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { ARButton, XR } from "@react-three/xr";
+import { ARButton, XR, Controllers } from "@react-three/xr";
 import XrHitModel from "./XrHitModel";
 import { useLocation } from "react-router-dom";
 import Footer from "../Footer";
@@ -19,6 +19,7 @@ const XrHitModelContainer = () => {
   });
   const productPrice = parseFloat(queryParams.get("price")) || 100;
   const [price, setPrice] = useState(productPrice);
+  const [isInARMode, setIsInARMode] = useState(false);
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -71,6 +72,51 @@ const XrHitModelContainer = () => {
     alert(`Price saved: $${price.toFixed(2)}`);
   };
 
+  // Handle AR session start
+  const handleARSessionStart = () => {
+    setIsInARMode(true);
+    
+    // Create a minimal AR mode indicator
+    const arIndicator = document.createElement('div');
+    arIndicator.id = 'ar-mode-indicator';
+    arIndicator.style.position = 'fixed';
+    arIndicator.style.top = '20px';
+    arIndicator.style.left = '50%';
+    arIndicator.style.transform = 'translateX(-50%)';
+    arIndicator.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    arIndicator.style.color = 'white';
+    arIndicator.style.padding = '10px 20px';
+    arIndicator.style.borderRadius = '20px';
+    arIndicator.style.fontWeight = 'bold';
+    arIndicator.style.zIndex = '9999';
+    arIndicator.textContent = 'AR Mode - Tap to Place Furniture';
+    
+    document.body.appendChild(arIndicator);
+    
+    // Hide the main UI while in AR mode
+    const mainUI = document.querySelector('.max-padd-container');
+    if (mainUI) {
+      mainUI.style.display = 'none';
+    }
+  };
+  
+  // Handle AR session end
+  const handleARSessionEnd = () => {
+    setIsInARMode(false);
+    
+    // Remove the AR indicator
+    const arIndicator = document.getElementById('ar-mode-indicator');
+    if (arIndicator) {
+      arIndicator.remove();
+    }
+    
+    // Show the main UI again
+    const mainUI = document.querySelector('.max-padd-container');
+    if (mainUI) {
+      mainUI.style.display = 'block';
+    }
+  };
+
   return (
     <>
       <div className="max-padd-container bg-primary rounded-xl p-3 mt-5 mb-6">
@@ -111,20 +157,24 @@ const XrHitModelContainer = () => {
             borderRadius: "8px",
             cursor: "pointer",
             marginTop: "40px",
-            backgroundColor: "#f8f8f8", // Lighter background for better visibility
+            backgroundColor: "#f8f8f8",
             alignItems: "center",
             justifyContent: "center",
           }}
           dpr={[1, 2]}
           camera={{ 
-            position: [0, 0.5, 2], // Moved camera closer and slightly elevated
-            fov: 45, // Wider field of view
+            position: [0, 0.5, 2],
+            fov: 45,
             near: 0.1,
             far: 1000
           }}
-          shadows // Enable shadows for better visuals
+          shadows
         >
-          <XR>
+          <XR
+            onSessionStart={handleARSessionStart}
+            onSessionEnd={handleARSessionEnd}
+          >
+            <Controllers />
             <XrHitModel
               modelPath={modelPath}
               color={color}
