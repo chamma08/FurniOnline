@@ -20,6 +20,9 @@ const XrHitModelContainer = () => {
   const productPrice = parseFloat(queryParams.get("price")) || 100;
   const [price, setPrice] = useState(productPrice);
   const [isInARMode, setIsInARMode] = useState(false);
+  
+  // Add states for rotation
+  const [rotation, setRotation] = useState(0);
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -27,7 +30,7 @@ const XrHitModelContainer = () => {
 
   const handleDimensionChange = (dimension, value) => {
     let newDimensions = { ...dimensions };
-    let scaleFactor = 0.2; // Other dimensions adjust by 20% of the change
+    let scaleFactor = 0.2; 
   
     let change = value - newDimensions[dimension]; 
   
@@ -58,6 +61,11 @@ const XrHitModelContainer = () => {
     setPrice(newPrice);
   };
   
+  // Handle rotation change
+  const handleRotationChange = (event) => {
+    setRotation(parseFloat(event.target.value));
+  };
+  
   const calculatePrice = (dimensions, basePrice) => {
     const volume = dimensions.width * dimensions.height * dimensions.depth;
     return basePrice * volume;
@@ -65,6 +73,7 @@ const XrHitModelContainer = () => {
   
   const handleReset = () => {
     setDimensions({ width: 1, height: 1, depth: 1 });
+    setRotation(0);
     setPrice(productPrice); 
   };
 
@@ -89,9 +98,27 @@ const XrHitModelContainer = () => {
     arIndicator.style.borderRadius = '20px';
     arIndicator.style.fontWeight = 'bold';
     arIndicator.style.zIndex = '9999';
-    arIndicator.textContent = 'AR Mode - Tap to Place Furniture';
+    arIndicator.textContent = 'AR Mode - Double tap to switch mode';
     
     document.body.appendChild(arIndicator);
+    
+    // Add AR controls explanation
+    const arControls = document.createElement('div');
+    arControls.id = 'ar-controls-info';
+    arControls.style.position = 'fixed';
+    arControls.style.bottom = '20px';
+    arControls.style.left = '50%';
+    arControls.style.transform = 'translateX(-50%)';
+    arControls.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    arControls.style.color = 'white';
+    arControls.style.padding = '10px 20px';
+    arControls.style.borderRadius = '20px';
+    arControls.style.fontWeight = 'bold';
+    arControls.style.zIndex = '9999';
+    arControls.style.textAlign = 'center';
+    arControls.innerHTML = 'Place: Tap to place<br>Rotate: Two-finger rotate<br>Scale: Pinch to resize';
+    
+    document.body.appendChild(arControls);
     
     // Hide the main UI while in AR mode
     const mainUI = document.querySelector('.max-padd-container');
@@ -104,10 +131,15 @@ const XrHitModelContainer = () => {
   const handleARSessionEnd = () => {
     setIsInARMode(false);
     
-    // Remove the AR indicator
+    // Remove the AR indicators
     const arIndicator = document.getElementById('ar-mode-indicator');
     if (arIndicator) {
       arIndicator.remove();
+    }
+    
+    const arControls = document.getElementById('ar-controls-info');
+    if (arControls) {
+      arControls.remove();
     }
     
     // Show the main UI again
@@ -135,6 +167,27 @@ const XrHitModelContainer = () => {
           dimensions={dimensions}
           onDimensionChange={handleDimensionChange}
         />
+        
+        {/* Add rotation control */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium mb-2">Rotation (Y-axis):</label>
+          <input
+            type="range"
+            min="0"
+            max="360"
+            value={rotation}
+            onChange={handleRotationChange}
+            className="w-full"
+          />
+          <div className="flex justify-between text-xs mt-1">
+            <span>0°</span>
+            <span>90°</span>
+            <span>180°</span>
+            <span>270°</span>
+            <span>360°</span>
+          </div>
+        </div>
+        
         <p className="text-lg font-semibold mt-4 text-black">Price: ${price.toFixed(2)}</p>
         <div className="flex gap-4 mt-8">
           <button
@@ -179,11 +232,23 @@ const XrHitModelContainer = () => {
               modelPath={modelPath}
               color={color}
               dimensions={dimensions}
+              rotation={rotation * (Math.PI / 180)} // Convert to radians
             />
           </XR>
         </Canvas>
         <ColorPicker onColorChange={handleColorChange} />
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
+          <div className="bg-white p-4 rounded-lg shadow-md max-w-md w-full">
+            <h3 className="font-bold text-lg mb-2">AR Mode Instructions:</h3>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Double tap to switch between Place, Rotate, and Scale modes</li>
+              <li>In Place mode: Tap to place furniture</li>
+              <li>In Rotate mode: Use two fingers to rotate furniture</li>
+              <li>In Scale mode: Pinch to resize furniture</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex justify-center mt-4">
           <ARButton
             sessionInit={{ 
               requiredFeatures: ["hit-test"],

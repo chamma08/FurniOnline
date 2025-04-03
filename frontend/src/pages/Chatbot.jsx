@@ -85,7 +85,7 @@ const ChatBot = () => {
     setChatHistory((prev) => [...prev, userMessage]);
 
     try {
-      const response = await axios.post("http://18.142.40.17:5000/chat", {
+      const response = await axios.post("http://127.0.0.1:5000/chat", {
         message,
       });
       const botText = response.data.response;
