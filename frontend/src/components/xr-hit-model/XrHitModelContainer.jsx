@@ -4,7 +4,7 @@ import XrHitModel from "./XrHitModel";
 import { useLocation } from "react-router-dom";
 import Footer from "../Footer";
 import ColorPicker from "../ColorPicker";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import DimensionControls from "../DimensionControls";
 
 const XrHitModelContainer = () => {
@@ -20,7 +20,6 @@ const XrHitModelContainer = () => {
   const productPrice = parseFloat(queryParams.get("price")) || 100;
   const [price, setPrice] = useState(productPrice);
   const [isInARMode, setIsInARMode] = useState(false);
-  const canvasContainerRef = useRef(null);
   
   // Define available colors for AR mode
   const availableColors = [
@@ -87,26 +86,11 @@ const XrHitModelContainer = () => {
     alert(`Price saved: $${price.toFixed(2)}`);
   };
 
-  // Cache original styles to restore them later
-  const originalStyles = useRef(new Map());
-
   // Handle AR session start
   const handleARSessionStart = () => {
     setIsInARMode(true);
     
-    // Create dedicated AR overlay container that will ONLY contain AR elements
-    const arOverlayContainer = document.createElement('div');
-    arOverlayContainer.id = 'ar-overlay-container';
-    arOverlayContainer.style.position = 'fixed';
-    arOverlayContainer.style.top = '0';
-    arOverlayContainer.style.left = '0';
-    arOverlayContainer.style.width = '100vw';
-    arOverlayContainer.style.height = '100vh';
-    arOverlayContainer.style.zIndex = '9999';
-    arOverlayContainer.style.backgroundColor = 'transparent';
-    document.body.appendChild(arOverlayContainer);
-    
-    // Create a minimal AR mode indicator within the overlay
+    // Create a minimal AR mode indicator
     const arIndicator = document.createElement('div');
     arIndicator.id = 'ar-mode-indicator';
     arIndicator.style.position = 'fixed';
@@ -118,170 +102,78 @@ const XrHitModelContainer = () => {
     arIndicator.style.padding = '10px 20px';
     arIndicator.style.borderRadius = '20px';
     arIndicator.style.fontWeight = 'bold';
-    arIndicator.style.zIndex = '10000';
+    arIndicator.style.zIndex = '9999';
     arIndicator.textContent = 'AR Mode Active';
-    arOverlayContainer.appendChild(arIndicator);
     
-    // Apply CSS to hide ALL non-AR elements (very aggressive approach)
-    const styleTag = document.createElement('style');
-    styleTag.id = 'ar-mode-styles';
-    styleTag.textContent = `
-      body > *:not(#ar-overlay-container):not(canvas):not(.canvas-container):not([id^="xr-"]) {
-        display: none !important;
-      }
-      #root > * {
-        display: none !important;
-      }
-      .canvas-container {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        z-index: 999 !important;
-      }
-      canvas {
-        width: 100% !important;
-        height: 100% !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
-      }
-    `;
-    document.head.appendChild(styleTag);
+    document.body.appendChild(arIndicator);
     
-    // Make sure the canvas is the only visible element
-    if (canvasContainerRef.current) {
-      canvasContainerRef.current.style.position = 'fixed';
-      canvasContainerRef.current.style.top = '0';
-      canvasContainerRef.current.style.left = '0';
-      canvasContainerRef.current.style.width = '100vw';
-      canvasContainerRef.current.style.height = '100vh';
-      canvasContainerRef.current.style.zIndex = '999';
-    }
-    
-    // Force body to full height/width
-    document.body.style.width = '100vw';
-    document.body.style.height = '100vh';
-    document.body.style.overflow = 'hidden';
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    
-    // Explicitly hide any possible UI containers
-    const containers = [
-      document.querySelector('.max-padd-container'),
-      document.querySelector('header'),
-      document.querySelector('footer'),
-      document.querySelector('nav'),
-      document.getElementById('root')
-    ];
-    
-    containers.forEach(container => {
-      if (container) {
-        // Save original display style
-        originalStyles.current.set(container, container.style.display);
-        // Hide it
-        container.style.display = 'none';
-      }
-    });
+    // Hide ALL UI elements when entering AR mode
+    hideAllUIElements(true);
   };
   
   // Handle AR session end
   const handleARSessionEnd = () => {
     setIsInARMode(false);
     
-    // Remove the AR overlay container
-    const arOverlayContainer = document.getElementById('ar-overlay-container');
-    if (arOverlayContainer) {
-      arOverlayContainer.remove();
+    // Remove the AR indicator
+    const arIndicator = document.getElementById('ar-mode-indicator');
+    if (arIndicator) {
+      arIndicator.remove();
     }
     
-    // Remove the style tag
-    const styleTag = document.getElementById('ar-mode-styles');
-    if (styleTag) {
-      styleTag.remove();
-    }
+    // Show UI elements again
+    hideAllUIElements(false);
+  };
+  
+  // Function to hide/show all UI elements
+  const hideAllUIElements = (hide) => {
+    // List of selectors for elements that should be hidden in AR mode
+    const elementsToHide = [
+      '.max-padd-container',
+      'header', 
+      'nav',
+      'footer',
+      '#root > div > *:not(.canvas-container)'  // Hide all direct children of root except canvas
+    ];
     
-    // Reset canvas container styles
-    if (canvasContainerRef.current) {
-      canvasContainerRef.current.style.position = '';
-      canvasContainerRef.current.style.top = '';
-      canvasContainerRef.current.style.left = '';
-      canvasContainerRef.current.style.width = '';
-      canvasContainerRef.current.style.height = '';
-      canvasContainerRef.current.style.zIndex = '';
-    }
-    
-    // Reset body styles
-    document.body.style.width = '';
-    document.body.style.height = '';
-    document.body.style.overflow = '';
-    document.body.style.margin = '';
-    document.body.style.padding = '';
-    
-    // Restore original display styles
-    originalStyles.current.forEach((value, element) => {
-      element.style.display = value;
+    elementsToHide.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(el => {
+        if (el && !el.classList.contains('ar-controls')) {
+          el.style.display = hide ? 'none' : '';
+        }
+      });
     });
     
-    // Clear the map
-    originalStyles.current.clear();
-    
-    // Force re-display of main container
-    const mainContainer = document.querySelector('.max-padd-container');
-    if (mainContainer) {
-      mainContainer.style.display = 'block';
+    // Special handling for the canvas container to ensure it's full screen in AR mode
+    const canvasContainer = document.querySelector('.canvas-container');
+    if (canvasContainer) {
+      if (hide) {
+        canvasContainer.style.position = 'fixed';
+        canvasContainer.style.top = '0';
+        canvasContainer.style.left = '0';
+        canvasContainer.style.width = '100vw';
+        canvasContainer.style.height = '100vh';
+        canvasContainer.style.zIndex = '999';
+      } else {
+        canvasContainer.style.position = '';
+        canvasContainer.style.top = '';
+        canvasContainer.style.left = '';
+        canvasContainer.style.width = '';
+        canvasContainer.style.height = '';
+        canvasContainer.style.zIndex = '';
+      }
     }
   };
 
-  // Custom ARButton that modifies the session init
-  const CustomARButton = () => {
-    // Prepare a clean DOM overlay for AR mode
-    const setupDomOverlay = () => {
-      // Create a clean overlay div if it doesn't exist
-      let arOverlayRoot = document.getElementById('ar-overlay-root');
-      if (!arOverlayRoot) {
-        arOverlayRoot = document.createElement('div');
-        arOverlayRoot.id = 'ar-overlay-root';
-        arOverlayRoot.style.position = 'fixed';
-        arOverlayRoot.style.top = '0';
-        arOverlayRoot.style.left = '0';
-        arOverlayRoot.style.width = '100%';
-        arOverlayRoot.style.height = '100%';
-        arOverlayRoot.style.zIndex = '9000';
-        arOverlayRoot.style.pointerEvents = 'none';
-        document.body.appendChild(arOverlayRoot);
-      }
-      
-      // Clear any existing content
-      arOverlayRoot.innerHTML = '';
-      
-      return arOverlayRoot;
-    };
-    
-    const sessionInit = {
-      requiredFeatures: ["hit-test"],
-      optionalFeatures: ["dom-overlay"],
-      domOverlay: { root: setupDomOverlay() }
-    };
-    
-    return (
-      <ARButton
-        sessionInit={sessionInit}
-        style={{
-          backgroundColor: "black",
-          border: "none",
-          borderRadius: "20px",
-          padding: "10px 20px",
-          cursor: "pointer",
-          fontWeight: "semibold",
-          color: "#ffff",
-          marginBottom: "20px",
-        }}
-      >
-        Enter AR
-      </ARButton>
-    );
-  };
+  // Add a wrapper div around Canvas for better handling
+  useEffect(() => {
+    // Add canvas-container class to the Canvas parent for targeting
+    const canvasElement = document.querySelector('canvas');
+    if (canvasElement && canvasElement.parentElement) {
+      canvasElement.parentElement.classList.add('canvas-container');
+    }
+  }, []);
 
   return (
     <>
@@ -316,7 +208,7 @@ const XrHitModelContainer = () => {
             Save Price
           </button>
         </div>
-        <div ref={canvasContainerRef} className="canvas-container">
+        <div className="canvas-container">
           <Canvas
             style={{
               width: "100%",
@@ -353,7 +245,25 @@ const XrHitModelContainer = () => {
         </div>
         <ColorPicker onColorChange={handleColorChange} />
         <div className="flex justify-center">
-          <CustomARButton />
+          <ARButton
+            sessionInit={{ 
+              requiredFeatures: ["hit-test"],
+              optionalFeatures: ["dom-overlay"],
+              domOverlay: { root: document.body }
+            }}
+            style={{
+              backgroundColor: "black",
+              border: "none",
+              borderRadius: "20px",
+              padding: "10px 20px",
+              cursor: "pointer",
+              fontWeight: "semibold",
+              color: "#ffff",
+              marginBottom: "20px",
+            }}
+          >
+            Enter AR
+          </ARButton>
         </div>
       </div>
       <Footer />
