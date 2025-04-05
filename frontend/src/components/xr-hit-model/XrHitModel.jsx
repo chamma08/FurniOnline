@@ -430,18 +430,6 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 Tap to place furniture
               </Text>
               <Text
-                position={[0, 0.2, -0.5]}
-                fontSize={0.05}
-                color="black"
-                anchorX="center"
-                anchorY="center"
-                backgroundOpacity={0.7}
-                backgroundColor="white"
-                padding={0.02}
-              >
-                Pinch to resize before placing
-              </Text>
-              <Text
                 position={[0, 0.1, -0.5]}
                 fontSize={0.05}
                 color="black"
