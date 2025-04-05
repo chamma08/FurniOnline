@@ -4,7 +4,7 @@ import XrHitModel from "./XrHitModel";
 import { useLocation } from "react-router-dom";
 import Footer from "../Footer";
 import ColorPicker from "../ColorPicker";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DimensionControls from "../DimensionControls";
 
 const XrHitModelContainer = () => {
@@ -107,11 +107,8 @@ const XrHitModelContainer = () => {
     
     document.body.appendChild(arIndicator);
     
-    // Hide the main UI while in AR mode
-    const mainUI = document.querySelector('.max-padd-container');
-    if (mainUI) {
-      mainUI.style.display = 'none';
-    }
+    // Hide ALL UI elements when entering AR mode
+    hideAllUIElements(true);
   };
   
   // Handle AR session end
@@ -124,12 +121,59 @@ const XrHitModelContainer = () => {
       arIndicator.remove();
     }
     
-    // Show the main UI again
-    const mainUI = document.querySelector('.max-padd-container');
-    if (mainUI) {
-      mainUI.style.display = 'block';
+    // Show UI elements again
+    hideAllUIElements(false);
+  };
+  
+  // Function to hide/show all UI elements
+  const hideAllUIElements = (hide) => {
+    // List of selectors for elements that should be hidden in AR mode
+    const elementsToHide = [
+      '.max-padd-container',
+      'header', 
+      'nav',
+      'footer',
+      '#root > div > *:not(.canvas-container)'  // Hide all direct children of root except canvas
+    ];
+    
+    elementsToHide.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(el => {
+        if (el && !el.classList.contains('ar-controls')) {
+          el.style.display = hide ? 'none' : '';
+        }
+      });
+    });
+    
+    // Special handling for the canvas container to ensure it's full screen in AR mode
+    const canvasContainer = document.querySelector('.canvas-container');
+    if (canvasContainer) {
+      if (hide) {
+        canvasContainer.style.position = 'fixed';
+        canvasContainer.style.top = '0';
+        canvasContainer.style.left = '0';
+        canvasContainer.style.width = '100vw';
+        canvasContainer.style.height = '100vh';
+        canvasContainer.style.zIndex = '999';
+      } else {
+        canvasContainer.style.position = '';
+        canvasContainer.style.top = '';
+        canvasContainer.style.left = '';
+        canvasContainer.style.width = '';
+        canvasContainer.style.height = '';
+        canvasContainer.style.zIndex = '';
+      }
     }
   };
+
+  // Add a wrapper div around Canvas for better handling
+  useEffect(() => {
+    // Add canvas-container class to the Canvas parent for targeting
+    const canvasElement = document.querySelector('canvas');
+    if (canvasElement && canvasElement.parentElement) {
+      canvasElement.parentElement.classList.add('canvas-container');
+    }
+  }, []);
 
   return (
     <>
@@ -164,39 +208,41 @@ const XrHitModelContainer = () => {
             Save Price
           </button>
         </div>
-        <Canvas
-          style={{
-            width: "100%",
-            height: "500px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            marginTop: "40px",
-            backgroundColor: "#f8f8f8",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          dpr={[1, 2]}
-          camera={{ 
-            position: [0, 0.5, 2],
-            fov: 45,
-            near: 0.1,
-            far: 1000
-          }}
-          shadows
-        >
-          <XR
-            onSessionStart={handleARSessionStart}
-            onSessionEnd={handleARSessionEnd}
+        <div className="canvas-container">
+          <Canvas
+            style={{
+              width: "100%",
+              height: "500px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              marginTop: "40px",
+              backgroundColor: "#f8f8f8",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            dpr={[1, 2]}
+            camera={{ 
+              position: [0, 0.5, 2],
+              fov: 45,
+              near: 0.1,
+              far: 1000
+            }}
+            shadows
           >
-            <Controllers />
-            <XrHitModel
-              modelPath={modelPath}
-              color={color}
-              dimensions={dimensions}
-              availableColors={availableColors}
-            />
-          </XR>
-        </Canvas>
+            <XR
+              onSessionStart={handleARSessionStart}
+              onSessionEnd={handleARSessionEnd}
+            >
+              <Controllers />
+              <XrHitModel
+                modelPath={modelPath}
+                color={color}
+                dimensions={dimensions}
+                availableColors={availableColors}
+              />
+            </XR>
+          </Canvas>
+        </div>
         <ColorPicker onColorChange={handleColorChange} />
         <div className="flex justify-center">
           <ARButton
