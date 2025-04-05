@@ -86,6 +86,9 @@ const XrHitModelContainer = () => {
     alert(`Price saved: $${price.toFixed(2)}`);
   };
 
+  // Store original styles for restoration when exiting AR mode
+  const originalStyles = useRef({});
+
   // Handle AR session start
   const handleARSessionStart = () => {
     setIsInARMode(true);
@@ -109,6 +112,13 @@ const XrHitModelContainer = () => {
     
     // Hide ALL UI elements when entering AR mode
     hideAllUIElements(true);
+    
+    // Set body and html to full width/height to prevent scrolling in AR mode
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.height = '100%';
+    document.body.style.height = '100%';
+    document.body.style.touchAction = 'none'; // Prevent touch scrolling
   };
   
   // Handle AR session end
@@ -123,39 +133,78 @@ const XrHitModelContainer = () => {
     
     // Show UI elements again
     hideAllUIElements(false);
+    
+    // Restore body and html styles
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.height = '';
+    document.body.style.height = '';
+    document.body.style.touchAction = '';
   };
   
   // Function to hide/show all UI elements
   const hideAllUIElements = (hide) => {
-    // List of selectors for elements that should be hidden in AR mode
-    const elementsToHide = [
-      '.max-padd-container',
-      'header', 
-      'nav',
-      'footer',
-      '#root > div > *:not(.canvas-container)'  // Hide all direct children of root except canvas
-    ];
-    
-    elementsToHide.forEach(selector => {
-      const elements = document.querySelectorAll(selector);
-      elements.forEach(el => {
-        if (el && !el.classList.contains('ar-controls')) {
-          el.style.display = hide ? 'none' : '';
+    if (hide) {
+      // Create a style element to add global CSS rules
+      const styleElement = document.createElement('style');
+      styleElement.id = 'ar-mode-styles';
+      
+      // CSS that hides everything except the canvas and AR-specific UI
+      styleElement.textContent = `
+        body > * {
+          display: none !important;
         }
-      });
-    });
-    
-    // Special handling for the canvas container to ensure it's full screen in AR mode
-    const canvasContainer = document.querySelector('.canvas-container');
-    if (canvasContainer) {
-      if (hide) {
+        
+        .canvas-container, .canvas-container * {
+          display: block !important;
+        }
+        
+        #ar-controls-container, #ar-mode-indicator, #root, #root > div {
+          display: block !important;
+        }
+        
+        #ar-mode-indicator, #ar-controls-container {
+          position: fixed !important;
+          z-index: 10000 !important;
+        }
+        
+        .canvas-container {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: 1 !important;
+        }
+        
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
+      `;
+      
+      document.head.appendChild(styleElement);
+      
+      // Make sure the canvas container is visible and properly sized
+      const canvasContainer = document.querySelector('.canvas-container');
+      if (canvasContainer) {
         canvasContainer.style.position = 'fixed';
         canvasContainer.style.top = '0';
         canvasContainer.style.left = '0';
         canvasContainer.style.width = '100vw';
         canvasContainer.style.height = '100vh';
-        canvasContainer.style.zIndex = '999';
-      } else {
+        canvasContainer.style.zIndex = '1';
+      }
+    } else {
+      // Remove the style element when exiting AR mode
+      const styleElement = document.getElementById('ar-mode-styles');
+      if (styleElement) {
+        styleElement.remove();
+      }
+      
+      // Restore canvas container style
+      const canvasContainer = document.querySelector('.canvas-container');
+      if (canvasContainer) {
         canvasContainer.style.position = '';
         canvasContainer.style.top = '';
         canvasContainer.style.left = '';
@@ -165,6 +214,9 @@ const XrHitModelContainer = () => {
       }
     }
   };
+
+  // Reference to store original styles
+  /* const originalStyles = {}; */
 
   // Add a wrapper div around Canvas for better handling
   useEffect(() => {
