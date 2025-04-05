@@ -22,11 +22,15 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
   // Flag to track if we're currently scaling the placement model
   const [isScalingPlacement, setIsScalingPlacement] = useState(false);
   
-  // New state for ghost model visibility
+  // State for ghost model visibility
   const [showGhostModel, setShowGhostModel] = useState(true);
   
-  // New state for current color in AR mode
+  // State for current color in AR mode
   const [currentArColor, setCurrentArColor] = useState(color);
+  
+  // New state for size adjustment bar
+  const [showSizeAdjustmentBar, setShowSizeAdjustmentBar] = useState(false);
+  const [currentSizeValue, setCurrentSizeValue] = useState(1.0);
 
   // Track touch points for pinch-to-scale
   const touchPointsRef = useRef([]);
@@ -34,14 +38,51 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
   // Adjust model scale for better fit
   const modelScale = [1, 1, 1];
 
-  // New function to toggle ghost model visibility
+  // Function to toggle ghost model visibility
   const toggleGhostModel = () => {
     setShowGhostModel(!showGhostModel);
   };
   
-  // New function to change the color in AR mode
+  // Function to change the color in AR mode
   const changeArColor = (nextColor) => {
     setCurrentArColor(nextColor);
+  };
+  
+  // New function to toggle size adjustment bar
+  const toggleSizeAdjustmentBar = () => {
+    setShowSizeAdjustmentBar(!showSizeAdjustmentBar);
+  };
+  
+  // New function to handle size adjustment
+  const handleSizeChange = (value) => {
+    setCurrentSizeValue(value);
+    
+    // Apply the size change to the appropriate model
+    const scaleFactor = value;
+    
+    if (selectedModel) {
+      // Apply scaling to selected model
+      setModels(prevModels => prevModels.map(model => {
+        if (model.id === selectedModel) {
+          return {
+            ...model,
+            dimensions: {
+              width: dimensions.width * scaleFactor,
+              height: dimensions.height * scaleFactor,
+              depth: dimensions.depth * scaleFactor
+            }
+          };
+        }
+        return model;
+      }));
+    } else {
+      // Apply scaling to placement (ghost) model
+      setPlacementDimensions({
+        width: dimensions.width * scaleFactor,
+        height: dimensions.height * scaleFactor,
+        depth: dimensions.depth * scaleFactor
+      });
+    }
   };
 
   useEffect(() => {
@@ -101,6 +142,9 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
               height: initialModelDimensions.height * adjustedScaleFactor,
               depth: initialModelDimensions.depth * adjustedScaleFactor
             });
+            
+            // Update the size slider value
+            setCurrentSizeValue(adjustedScaleFactor);
           } else if (selectedModel) {
             // Apply scaling to selected model
             setModels(prevModels => prevModels.map(model => {
@@ -116,6 +160,9 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
               }
               return model;
             }));
+            
+            // Update the size slider value
+            setCurrentSizeValue(adjustedScaleFactor);
           }
         }
       };
@@ -131,7 +178,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
       gl.domElement.addEventListener('touchmove', handleTouchMove, { passive: false });
       gl.domElement.addEventListener('touchend', handleTouchEnd);
       
-      // Create AR UI controls for ghost toggle and color change
+      // Create AR UI controls
       createArControls();
       
       return () => {
@@ -148,7 +195,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
     camera.updateProjectionMatrix(); 
   }, [isPresenting, camera, selectedModel, models, initialPinchDistance, initialModelDimensions, gl, isScalingPlacement, placementDimensions, showGhostModel]);
 
-  // Create AR UI controls
+  // Create AR UI controls including the new size adjustment bar
   const createArControls = () => {
     // Create container for AR controls
     const arControlsContainer = document.createElement('div');
@@ -198,12 +245,87 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
       colorPickerContainer.appendChild(colorButton);
     });
     
-    // Add elements to container
+    // Create size adjustment toggle button with arrow
+    const sizeToggleButton = document.createElement('button');
+    sizeToggleButton.id = 'size-toggle-button';
+    sizeToggleButton.innerHTML = '&#9654; Size';  // Right arrow
+    sizeToggleButton.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    sizeToggleButton.style.color = 'white';
+    sizeToggleButton.style.padding = '10px 20px';
+    sizeToggleButton.style.borderRadius = '20px';
+    sizeToggleButton.style.border = 'none';
+    sizeToggleButton.style.fontWeight = 'bold';
+    sizeToggleButton.style.cursor = 'pointer';
+    sizeToggleButton.addEventListener('click', toggleSizeAdjustmentBar);
+    
+    // Create vertical size adjustment bar container
+    const sizeAdjustmentContainer = document.createElement('div');
+    sizeAdjustmentContainer.id = 'size-adjustment-container';
+    sizeAdjustmentContainer.style.position = 'fixed';
+    sizeAdjustmentContainer.style.right = '20px';
+    sizeAdjustmentContainer.style.top = '50%';
+    sizeAdjustmentContainer.style.transform = 'translateY(-50%)';
+    sizeAdjustmentContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    sizeAdjustmentContainer.style.padding = '15px 10px';
+    sizeAdjustmentContainer.style.borderRadius = '30px';
+    sizeAdjustmentContainer.style.display = 'none';  // Hidden by default
+    sizeAdjustmentContainer.style.flexDirection = 'column';
+    sizeAdjustmentContainer.style.alignItems = 'center';
+    sizeAdjustmentContainer.style.gap = '10px';
+    sizeAdjustmentContainer.style.zIndex = '10001';
+    
+    // Create size label
+    const sizeLabel = document.createElement('div');
+    sizeLabel.textContent = 'Size';
+    sizeLabel.style.color = 'white';
+    sizeLabel.style.fontWeight = 'bold';
+    sizeLabel.style.fontSize = '12px';
+    sizeLabel.style.marginBottom = '5px';
+    
+    // Create vertical slider
+    const sizeSlider = document.createElement('input');
+    sizeSlider.type = 'range';
+    sizeSlider.min = '0.2';
+    sizeSlider.max = '3.0';
+    sizeSlider.step = '0.1';
+    sizeSlider.value = currentSizeValue.toString();
+    sizeSlider.style.webkitAppearance = 'slider-vertical';  // For Safari
+    sizeSlider.style.appearance = 'slider-vertical';
+    sizeSlider.style.height = '150px';
+    sizeSlider.style.width = '20px';
+    sizeSlider.style.margin = '0';
+    sizeSlider.style.outline = 'none';
+    sizeSlider.style.cursor = 'pointer';
+    
+    // Add value display
+    const sizeValueDisplay = document.createElement('div');
+    sizeValueDisplay.id = 'size-value-display';
+    sizeValueDisplay.textContent = '×' + currentSizeValue.toFixed(1);
+    sizeValueDisplay.style.color = 'white';
+    sizeValueDisplay.style.fontWeight = 'bold';
+    sizeValueDisplay.style.fontSize = '14px';
+    sizeValueDisplay.style.marginTop = '5px';
+    
+    // Handle slider input
+    sizeSlider.addEventListener('input', (e) => {
+      const value = parseFloat(e.target.value);
+      handleSizeChange(value);
+      sizeValueDisplay.textContent = '×' + value.toFixed(1);
+    });
+    
+    // Add elements to containers
+    sizeAdjustmentContainer.appendChild(sizeLabel);
+    sizeAdjustmentContainer.appendChild(sizeSlider);
+    sizeAdjustmentContainer.appendChild(sizeValueDisplay);
+    
+    // Add elements to main container
     arControlsContainer.appendChild(ghostToggleButton);
     arControlsContainer.appendChild(colorPickerContainer);
+    arControlsContainer.appendChild(sizeToggleButton);
     
-    // Add container to body
+    // Add containers to body
     document.body.appendChild(arControlsContainer);
+    document.body.appendChild(sizeAdjustmentContainer);
   };
   
   // Remove AR UI controls
@@ -212,15 +334,33 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
     if (arControlsContainer) {
       arControlsContainer.remove();
     }
+    
+    const sizeAdjustmentContainer = document.getElementById('size-adjustment-container');
+    if (sizeAdjustmentContainer) {
+      sizeAdjustmentContainer.remove();
+    }
   };
 
-  // Update ghost toggle button text
+  // Update buttons state based on visibility states
   useEffect(() => {
     const ghostToggleButton = document.getElementById('ghost-toggle-button');
     if (ghostToggleButton) {
       ghostToggleButton.textContent = showGhostModel ? 'Hide Ghost Model' : 'Show Ghost Model';
     }
-  }, [showGhostModel]);
+    
+    const sizeToggleButton = document.getElementById('size-toggle-button');
+    const sizeAdjustmentContainer = document.getElementById('size-adjustment-container');
+    
+    if (sizeToggleButton && sizeAdjustmentContainer) {
+      if (showSizeAdjustmentBar) {
+        sizeToggleButton.innerHTML = '&#9664; Size';  // Left arrow (when open)
+        sizeAdjustmentContainer.style.display = 'flex';
+      } else {
+        sizeToggleButton.innerHTML = '&#9654; Size';  // Right arrow (when closed)
+        sizeAdjustmentContainer.style.display = 'none';
+      }
+    }
+  }, [showGhostModel, showSizeAdjustmentBar]);
 
   // Sync placement dimensions with prop dimensions on initial load and changes
   useEffect(() => {
@@ -253,8 +393,8 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
       id: Date.now(),
       position: placementPosition.clone(),
       rotation: placementModelRef.current.quaternion.clone(),
-      color: currentArColor, // Use current AR color
-      dimensions: {...placementDimensions} // Use the currently scaled dimensions
+      color: currentArColor,
+      dimensions: {...placementDimensions}
     };
     
     // Add the new model to the array of placed models
@@ -303,6 +443,21 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
     setSelectedModel(id === selectedModel ? null : id);
     // Show dimensions when selected
     setShowDimensions(prev => ({...prev, [id]: true}));
+    
+    // Update the size slider value based on the selected model's scale
+    if (id !== selectedModel) {
+      const selectedModelData = models.find(m => m.id === id);
+      if (selectedModelData) {
+        const scaleFactor = selectedModelData.dimensions.width / dimensions.width;
+        setCurrentSizeValue(scaleFactor);
+        
+        // Update slider value if it exists
+        const sizeSlider = document.querySelector('#size-adjustment-container input');
+        const sizeValueDisplay = document.getElementById('size-value-display');
+        if (sizeSlider) sizeSlider.value = scaleFactor.toString();
+        if (sizeValueDisplay) sizeValueDisplay.textContent = '×' + scaleFactor.toFixed(1);
+      }
+    }
   };
   
   // Format dimensions for display
@@ -439,7 +594,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 backgroundColor="white"
                 padding={0.02}
               >
-                Use buttons below to change color and hide ghost
+                Use the size button to adjust dimensions
               </Text>
             </>
           )}
@@ -455,7 +610,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
               backgroundColor="white"
               padding={0.02}
             >
-              Pinch to resize
+              Pinch to resize or use size slider
             </Text>
           )}
         </>
