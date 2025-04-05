@@ -202,8 +202,8 @@ const XrHitModelContainer = () => {
           <ARButton
             sessionInit={{ 
               requiredFeatures: ["hit-test"],
-              optionalFeatures: ["dom-overlay"],
-              domOverlay: { root: document.body }
+              /* optionalFeatures: ["dom-overlay"],
+              domOverlay: { root: document.body } */
             }}
             style={{
               backgroundColor: "black",
