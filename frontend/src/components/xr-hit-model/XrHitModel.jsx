@@ -5,7 +5,7 @@ import Model from './Model';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Vector3, Matrix4, Quaternion } from 'three';
 
-const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, depth: 1 } }) => {
+const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, depth: 1 }, availableColors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"] }) => {
   const placementModelRef = useRef();
   const [models, setModels] = useState([]);
   const [placementPosition, setPlacementPosition] = useState(new Vector3(0, 0, 0));
@@ -21,12 +21,28 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
   
   // Flag to track if we're currently scaling the placement model
   const [isScalingPlacement, setIsScalingPlacement] = useState(false);
+  
+  // New state for ghost model visibility
+  const [showGhostModel, setShowGhostModel] = useState(true);
+  
+  // New state for current color in AR mode
+  const [currentArColor, setCurrentArColor] = useState(color);
 
   // Track touch points for pinch-to-scale
   const touchPointsRef = useRef([]);
   
   // Adjust model scale for better fit
   const modelScale = [1, 1, 1];
+
+  // New function to toggle ghost model visibility
+  const toggleGhostModel = () => {
+    setShowGhostModel(!showGhostModel);
+  };
+  
+  // New function to change the color in AR mode
+  const changeArColor = (nextColor) => {
+    setCurrentArColor(nextColor);
+  };
 
   useEffect(() => {
     if (isPresenting) {
@@ -75,12 +91,15 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
           // Calculate scale factor
           const scaleFactor = newDistance / initialPinchDistance;
           
+          // Apply a more responsive scaling factor
+          const adjustedScaleFactor = 1 + (scaleFactor - 1) * 1.5;
+          
           if (isScalingPlacement) {
             // Apply scaling to placement (ghost) model
             setPlacementDimensions({
-              width: initialModelDimensions.width * scaleFactor,
-              height: initialModelDimensions.height * scaleFactor,
-              depth: initialModelDimensions.depth * scaleFactor
+              width: initialModelDimensions.width * adjustedScaleFactor,
+              height: initialModelDimensions.height * adjustedScaleFactor,
+              depth: initialModelDimensions.depth * adjustedScaleFactor
             });
           } else if (selectedModel) {
             // Apply scaling to selected model
@@ -89,9 +108,9 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 return {
                   ...model,
                   dimensions: {
-                    width: initialModelDimensions.width * scaleFactor,
-                    height: initialModelDimensions.height * scaleFactor,
-                    depth: initialModelDimensions.depth * scaleFactor
+                    width: initialModelDimensions.width * adjustedScaleFactor,
+                    height: initialModelDimensions.height * adjustedScaleFactor,
+                    depth: initialModelDimensions.depth * adjustedScaleFactor
                   }
                 };
               }
@@ -108,20 +127,100 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
         setIsScalingPlacement(false);
       };
       
-      gl.domElement.addEventListener('touchstart', handleTouchStart);
-      gl.domElement.addEventListener('touchmove', handleTouchMove);
+      gl.domElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+      gl.domElement.addEventListener('touchmove', handleTouchMove, { passive: false });
       gl.domElement.addEventListener('touchend', handleTouchEnd);
+      
+      // Create AR UI controls for ghost toggle and color change
+      createArControls();
       
       return () => {
         gl.domElement.removeEventListener('touchstart', handleTouchStart);
         gl.domElement.removeEventListener('touchmove', handleTouchMove);
         gl.domElement.removeEventListener('touchend', handleTouchEnd);
+        
+        // Remove AR UI controls
+        removeArControls();
       };
     } else {
       camera.fov = 45;
     }
     camera.updateProjectionMatrix(); 
-  }, [isPresenting, camera, selectedModel, models, initialPinchDistance, initialModelDimensions, gl, isScalingPlacement, placementDimensions]);
+  }, [isPresenting, camera, selectedModel, models, initialPinchDistance, initialModelDimensions, gl, isScalingPlacement, placementDimensions, showGhostModel]);
+
+  // Create AR UI controls
+  const createArControls = () => {
+    // Create container for AR controls
+    const arControlsContainer = document.createElement('div');
+    arControlsContainer.id = 'ar-controls-container';
+    arControlsContainer.style.position = 'fixed';
+    arControlsContainer.style.bottom = '20px';
+    arControlsContainer.style.left = '50%';
+    arControlsContainer.style.transform = 'translateX(-50%)';
+    arControlsContainer.style.display = 'flex';
+    arControlsContainer.style.flexDirection = 'column';
+    arControlsContainer.style.gap = '10px';
+    arControlsContainer.style.zIndex = '10000';
+    
+    // Create ghost toggle button
+    const ghostToggleButton = document.createElement('button');
+    ghostToggleButton.id = 'ghost-toggle-button';
+    ghostToggleButton.textContent = 'Hide Ghost Model';
+    ghostToggleButton.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    ghostToggleButton.style.color = 'white';
+    ghostToggleButton.style.padding = '10px 20px';
+    ghostToggleButton.style.borderRadius = '20px';
+    ghostToggleButton.style.border = 'none';
+    ghostToggleButton.style.fontWeight = 'bold';
+    ghostToggleButton.style.cursor = 'pointer';
+    ghostToggleButton.addEventListener('click', toggleGhostModel);
+    
+    // Create color picker container
+    const colorPickerContainer = document.createElement('div');
+    colorPickerContainer.id = 'ar-color-picker';
+    colorPickerContainer.style.display = 'flex';
+    colorPickerContainer.style.justifyContent = 'center';
+    colorPickerContainer.style.gap = '10px';
+    colorPickerContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    colorPickerContainer.style.padding = '10px';
+    colorPickerContainer.style.borderRadius = '20px';
+    
+    // Add color options
+    availableColors.forEach(colorOption => {
+      const colorButton = document.createElement('div');
+      colorButton.style.width = '30px';
+      colorButton.style.height = '30px';
+      colorButton.style.backgroundColor = colorOption;
+      colorButton.style.borderRadius = '50%';
+      colorButton.style.cursor = 'pointer';
+      colorButton.style.border = '2px solid white';
+      colorButton.addEventListener('click', () => changeArColor(colorOption));
+      colorPickerContainer.appendChild(colorButton);
+    });
+    
+    // Add elements to container
+    arControlsContainer.appendChild(ghostToggleButton);
+    arControlsContainer.appendChild(colorPickerContainer);
+    
+    // Add container to body
+    document.body.appendChild(arControlsContainer);
+  };
+  
+  // Remove AR UI controls
+  const removeArControls = () => {
+    const arControlsContainer = document.getElementById('ar-controls-container');
+    if (arControlsContainer) {
+      arControlsContainer.remove();
+    }
+  };
+
+  // Update ghost toggle button text
+  useEffect(() => {
+    const ghostToggleButton = document.getElementById('ghost-toggle-button');
+    if (ghostToggleButton) {
+      ghostToggleButton.textContent = showGhostModel ? 'Hide Ghost Model' : 'Show Ghost Model';
+    }
+  }, [showGhostModel]);
 
   // Sync placement dimensions with prop dimensions on initial load and changes
   useEffect(() => {
@@ -154,7 +253,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
       id: Date.now(),
       position: placementPosition.clone(),
       rotation: placementModelRef.current.quaternion.clone(),
-      color: color,
+      color: currentArColor, // Use current AR color
       dimensions: {...placementDimensions} // Use the currently scaled dimensions
     };
     
@@ -243,32 +342,34 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
       {/* In AR mode, display placed models and ghost model */}
       {isPresenting && (
         <>
-          {/* Ghost model for placement */}
-          <Interactive onSelect={placeModel}>
-            <group ref={placementModelRef}>
-              <Model
-                modelPath={modelPath}
-                color={color}
-                dimensions={placementDimensions}
-                scale={modelScale}
-                opacity={0.6}
-                isGhost={true}
-              />
-              {/* Show dimensions for ghost model */}
-              <Text
-                position={[0, placementDimensions.height * 0.5 + 0.1, 0]}
-                fontSize={0.05}
-                color="black"
-                anchorX="center"
-                anchorY="bottom"
-                backgroundOpacity={0.7}
-                backgroundColor="white"
-                padding={0.02}
-              >
-                {formatDimensions(placementDimensions)}
-              </Text>
-            </group>
-          </Interactive>
+          {/* Ghost model for placement - only shown when showGhostModel is true */}
+          {showGhostModel && (
+            <Interactive onSelect={placeModel}>
+              <group ref={placementModelRef}>
+                <Model
+                  modelPath={modelPath}
+                  color={currentArColor}
+                  dimensions={placementDimensions}
+                  scale={modelScale}
+                  opacity={0.6}
+                  isGhost={true}
+                />
+                {/* Show dimensions for ghost model */}
+                <Text
+                  position={[0, placementDimensions.height * 0.5 + 0.1, 0]}
+                  fontSize={0.05}
+                  color="black"
+                  anchorX="center"
+                  anchorY="bottom"
+                  backgroundOpacity={0.7}
+                  backgroundColor="white"
+                  padding={0.02}
+                >
+                  {formatDimensions(placementDimensions)}
+                </Text>
+              </group>
+            </Interactive>
+          )}
 
           {/* Already placed models */}
           {models.map(({ id, position, rotation, color: modelColor, dimensions: modelDimensions }) => (
@@ -276,8 +377,8 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
               <group position={position} quaternion={rotation}>
                 <Model
                   modelPath={modelPath}
-                  color={modelColor || color}
-                  dimensions={modelDimensions || dimensions}
+                  color={modelColor}
+                  dimensions={modelDimensions}
                   scale={modelScale}
                   opacity={selectedModel === id ? 0.8 : 1}
                 />
@@ -317,7 +418,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
           {models.length === 0 && (
             <>
               <Text
-                position={[0, 0.2, -0.5]}
+                position={[0, 0.3, -0.5]}
                 fontSize={0.05}
                 color="black"
                 anchorX="center"
@@ -329,7 +430,7 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 Tap to place furniture
               </Text>
               <Text
-                position={[0, 0.1, -0.5]}
+                position={[0, 0.2, -0.5]}
                 fontSize={0.05}
                 color="black"
                 anchorX="center"
@@ -339,6 +440,18 @@ const XrHitModel = ({ modelPath, color, dimensions = { width: 1, height: 1, dept
                 padding={0.02}
               >
                 Pinch to resize before placing
+              </Text>
+              <Text
+                position={[0, 0.1, -0.5]}
+                fontSize={0.05}
+                color="black"
+                anchorX="center"
+                anchorY="center"
+                backgroundOpacity={0.7}
+                backgroundColor="white"
+                padding={0.02}
+              >
+                Use buttons below to change color and hide ghost
               </Text>
             </>
           )}

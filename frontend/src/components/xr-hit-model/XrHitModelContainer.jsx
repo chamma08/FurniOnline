@@ -20,6 +20,20 @@ const XrHitModelContainer = () => {
   const productPrice = parseFloat(queryParams.get("price")) || 100;
   const [price, setPrice] = useState(productPrice);
   const [isInARMode, setIsInARMode] = useState(false);
+  
+  // Define available colors for AR mode
+  const availableColors = [
+    "#ff0000", // Red
+    "#00ff00", // Green
+    "#0000ff", // Blue
+    "#ffff00", // Yellow
+    "#ff00ff", // Magenta
+    "#00ffff", // Cyan
+    "#ffffff", // White
+    "#000000", // Black
+    "#8b4513", // Brown
+    "#808080"  // Gray
+  ];
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -89,7 +103,7 @@ const XrHitModelContainer = () => {
     arIndicator.style.borderRadius = '20px';
     arIndicator.style.fontWeight = 'bold';
     arIndicator.style.zIndex = '9999';
-    arIndicator.textContent = 'AR Mode - Tap to Place Furniture';
+    arIndicator.textContent = 'AR Mode Active';
     
     document.body.appendChild(arIndicator);
     
@@ -179,6 +193,7 @@ const XrHitModelContainer = () => {
               modelPath={modelPath}
               color={color}
               dimensions={dimensions}
+              availableColors={availableColors}
             />
           </XR>
         </Canvas>
@@ -187,8 +202,8 @@ const XrHitModelContainer = () => {
           <ARButton
             sessionInit={{ 
               requiredFeatures: ["hit-test"],
-              /* optionalFeatures: ["dom-overlay"],
-              domOverlay: { root: document.body } */
+              optionalFeatures: ["dom-overlay"],
+              domOverlay: { root: document.body }
             }}
             style={{
               backgroundColor: "black",
