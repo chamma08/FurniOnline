@@ -5,8 +5,6 @@ import { FaFileUpload, FaRegCheckCircle, FaSearch } from "react-icons/fa";
 import { FaCircleNotch } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
-const text = "AI Product Recommendations";
-
 const Recommendations = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
@@ -66,121 +64,215 @@ const Recommendations = () => {
     setUploadedImageURL("");
   };
 
-  return (
-    <div>
-      <div className="bg-primary mb-16 bg-rc bg-cover bg-center bg-no-repeat w-full">
-        <div className="max-padd-container py-10">
-          <h1 className="h1 font-[300] capitalize max-w-[722px] text-black">
-            {text.split("").map((char, index) => (
-              <motion.span
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.4 }} 
-                className={index < 2 ? "font-bold text-blue-900" : ""} 
-              >
-                {char}
-              </motion.span>
-            ))}
-          </h1>
-          <div className="flex items-center gap-x-4 mt-6 mb-10">
-            <di className="relative inline-block">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-              <div
-                className={`flex items-center gap-2 px-4 py-2 ${
-                  selectedImage ? "bg-green-600" : "bg-[#1b7c8d]"
-                } text-white rounded-full cursor-pointer`}
-              >
-                {selectedImage ? (
-                  <>
-                    <FaRegCheckCircle size={20} />
-                    <span>Uploaded</span>
-                  </>
-                ) : (
-                  <>
-                    <FaFileUpload size={20} />
-                    <span>Upload</span>
-                  </>
-                )}
-              </div>
-            </di>
-            <button
-              onClick={fetchRecommendations}
-              disabled={!selectedImage}
-              className={`${
-                selectedImage
-                  ? "bg-blue-700 hover:bg-blue-600"
-                  : "bg-gray-300 cursor-not-allowed"
-              } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
-            >
-              Search <FaSearch />
-            </button>
-            <button
-              onClick={handleReset}
-              disabled={!selectedImage}
-              className={`${
-                selectedImage
-                  ? "bg-slate-500 hover:bg-slate-400"
-                  : "bg-gray-300 cursor-not-allowed"
-              } rounded-full text-white p-2 flexCenter gap-x-2 capitalize`}
-            >
-              Reset <FaCircleNotch />
-            </button>
-          </div>
+  // Animation variants for better UI feedback
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
-          {uploadedImageURL && (
-            <div className="mt-4">
-              <h2 className="text-xl font-bold mb-2 bg-white rounded-xl w-1/2 justify-center items-center sm:bg-transparent sm:border-black text-center sm:text-left p-2">
-                Uploaded Image
-              </h2>
-              <div className="rounded">
-                <img
-                  src={uploadedImageURL}
-                  alt="Uploaded"
-                  className="max-h-[180px] max-w-[180px] object-cover rounded-xl"
+  return (
+    <div className="min-h-screen bg-blue-50">
+      <div className="bg-primary mb-8 bg-rc bg-cover bg-center bg-no-repeat w-full py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Hero Section with Animated Title */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4 tracking-tight">
+              <motion.span 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="font-bold text-secondary"
+              >
+                AI
+              </motion.span>
+              <motion.span 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                {" Product Recommendations"}
+              </motion.span>
+            </h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="text-gray-600 text-lg max-w-2xl mx-auto"
+            >
+              Upload a photo of furniture you like and we'll find similar products for you instantly.
+            </motion.p>
+          </motion.div>
+          
+          {/* Upload Section */}
+          <motion.div 
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="bg-white p-8 rounded-2xl shadow-lg max-w-3xl mx-auto mb-10"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+              <div className="relative inline-block w-full sm:w-auto">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
+                  aria-label="Upload an image"
                 />
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex items-center justify-center gap-2 px-6 py-3 ${
+                    selectedImage ? "bg-green-500" : "bg-blue-500"
+                  } text-white rounded-xl cursor-pointer font-medium shadow-md w-full sm:w-auto`}
+                >
+                  {selectedImage ? (
+                    <>
+                      <FaRegCheckCircle size={20} />
+                      <span>Uploaded</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaFileUpload size={20} />
+                      <span>Upload Image</span>
+                    </>
+                  )}
+                </motion.div>
               </div>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={fetchRecommendations}
+                disabled={!selectedImage}
+                className={`${
+                  selectedImage
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-gray-300 cursor-not-allowed"
+                } flex items-center justify-center gap-2 rounded-xl text-white px-6 py-3 font-medium shadow-md w-full sm:w-auto`}
+              >
+                Find Similar <FaSearch />
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleReset}
+                disabled={!selectedImage}
+                className={`${
+                  selectedImage
+                    ? "bg-gray-700 hover:bg-gray-800"
+                    : "bg-gray-300 cursor-not-allowed"
+                } flex items-center justify-center gap-2 rounded-xl text-white px-6 py-3 font-medium shadow-md w-full sm:w-auto`}
+              >
+                Reset <FaCircleNotch />
+              </motion.button>
             </div>
+
+            {/* Image Preview Section */}
+            {uploadedImageURL && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center"
+              >
+                <h2 className="text-xl font-medium mb-4 text-gray-800">Your Uploaded Image</h2>
+                <div className="border-2 border-blue-100 p-2 rounded-xl shadow-md">
+                  <img
+                    src={uploadedImageURL}
+                    alt="Uploaded furniture"
+                    className="h-48 w-48 object-cover rounded-lg"
+                  />
+                </div>
+                <p className="text-sm text-gray-500 mt-2">We'll find products similar to this image</p>
+              </motion.div>
+            )}
+          </motion.div>
+          
+          {/* Loading Indicator */}
+          {loading && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-12"
+            >
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 border-4 border-transparent border-t-teal-400 rounded-full animate-spin"></div>
+                </div>
+              </div>
+              <p className="mt-4 text-gray-600 font-medium">Finding similar products...</p>
+            </motion.div>
           )}
 
-          {loading ? (
-            <div className="flex justify-center items-center mt-8">
-              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
-            </div>
-          ) : (
-            recommendations.length > 0 && (
-              <div className="mt-4 text-center">
-                <h2 className="text-3xl font-semibold mb-6 h1">
-                  Our <span className="text-green-600">Recommendations</span>
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {recommendations.map((product) => (
-                    <div
-                      key={product._id}
-                      className="bg-white rounded-3xl shadow p-4"
-                    >
+          {/* Recommendations Section */}
+          {!loading && recommendations.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              className="mt-12"
+            >
+              <h2 className="text-3xl font-bold mb-8 text-center">
+                <span className="text-blue-600">Recommended</span> Products
+              </h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recommendations.map((product, index) => (
+                  <motion.div
+                    key={product._id}
+                    variants={fadeInUp}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                    className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100"
+                  >
+                    <div className="relative h-56 overflow-hidden">
                       <img
                         src={product.image[0]}
                         alt={product.name}
-                        className="w-full h-48 object-cover mb-2 rounded-xl"
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                       />
-                      <div className="bg-gray-100 p-2 rounded-lg">
-                        <h3 className="text-lg font-semibold">
-                          {product.name}
-                        </h3>
-                        <p className="text-gray-700">{product.description}</p>
-                        <p className="font-bold mt-2">${product.price}</p>
+                      <div className="absolute top-3 right-3 bg-blue-500 text-white rounded-full px-3 py-1 text-sm font-bold shadow-md">
+                        ${product.price}
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <div className="p-5">
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">{product.name}</h3>
+                      <p className="text-gray-600 mb-4">{product.description}</p>
+                      <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-medium transition-all duration-300 shadow-md">
+                        View Details
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            )
+            </motion.div>
+          )}
+          
+          {/* Empty State */}
+          {!loading && !recommendations.length && !uploadedImageURL && (
+            <motion.div 
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              className="text-center py-8"
+            >
+              <div className="bg-blue-50 rounded-xl p-8 max-w-md mx-auto">
+                <FaFileUpload className="text-blue-500 text-5xl mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-800 mb-2">Upload an image to get started</h3>
+                <p className="text-gray-600">We'll use AI to find similar furniture products that match your style.</p>
+              </div>
+            </motion.div>
           )}
         </div>
       </div>
