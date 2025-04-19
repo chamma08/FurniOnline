@@ -10,6 +10,9 @@ const Recommendations = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [uploadedImageURL, setUploadedImageURL] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Set the maximum number of products to display
+  const maxProductsToShow = 3;
 
   const generateDummyProducts = (images) => {
     return images.map((img, index) => ({
@@ -48,7 +51,9 @@ const Recommendations = () => {
         }
       );
       const aiOutput = response.data.recommendations;
-      const dummyProducts = generateDummyProducts(aiOutput);
+      // Limit the number of images to maxProductsToShow
+      const limitedImages = aiOutput.slice(0, maxProductsToShow);
+      const dummyProducts = generateDummyProducts(limitedImages);
       setRecommendations(dummyProducts);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
@@ -222,10 +227,10 @@ const Recommendations = () => {
               className="mt-12"
             >
               <h2 className="text-3xl font-bold mb-8 text-center">
-                <span className="text-blue-600">Recommended</span> Products
+                <span className="text-green-600">Recommended</span> Products
               </h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-3xl mx-auto">
                 {recommendations.map((product, index) => (
                   <motion.div
                     key={product._id}

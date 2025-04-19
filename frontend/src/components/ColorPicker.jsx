@@ -40,7 +40,7 @@ const ColorPicker = ({ onColorChange }) => {
 
   return (
     <div className="flex justify-center mt-5 mb-10">
-      <div className="w-2/3">
+      <div className="w-10/12">
         <Slider {...settings}>
           {colors.map((color, index) => (
             <div key={index} className="flex justify-center">
